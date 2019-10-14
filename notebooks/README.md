@@ -2,7 +2,7 @@
 
 Jupyter notebooks used for the project analyses. If notebook won't display on Github, copy and paste the notebook URL from Github to [https://nbviewer.jupyter.org/](https://nbviewer.jupyter.org/).
 
-- [example.ipynb](https://github.com/nicolossus/FYS-STK4155-Project2/blob/master/notebooks/example.ipynb): How to set up notebook. [View in nbviewer](https://nbviewer.jupyter.org/github/nicolossus/FYS-STK4155-Project2/blob/master/notebooks/example.ipynb).
+- [example.ipynb](https://github.com/nicolossus/FYS-STK4155-Project2/blob/master/notebooks/example.ipynb): How to set up notebook. __[View in nbviewer](https://nbviewer.jupyter.org/github/nicolossus/FYS-STK4155-Project2/blob/master/notebooks/example.ipynb)__.
 
 - item2
   - subitem2
