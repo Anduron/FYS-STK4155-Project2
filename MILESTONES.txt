@@ -1,0 +1,21 @@
+MILESTONES
+
+--- Week 42 (Oct. 14 - 20)
+
+    - Overview over problem and theory
+
+--- Week 43 (Oct. 21 - 27)
+
+    - Implement code and unit tests
+
+--- Week 44 (Oct. 28 - Nov. 3)
+
+    - Analysis and report
+
+--- Week 45 (Nov. 4 - 9)
+
+    - Polish report
+    - Deadline: Nov. 9 (Saturday)
+
+
+PROGRESS PLAN
