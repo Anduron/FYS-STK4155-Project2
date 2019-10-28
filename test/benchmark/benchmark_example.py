@@ -1,11 +1,55 @@
 from benchmark_tools import timer
+import numpy as np
+
+
+def generate_design_matrix_1(states):
+    """
+    Generate data for 1D Ising model that is optimized for linear regression
+    """
+    states = np.einsum('...i,...j->...ij', states, states)
+    shape = states.shape
+    states = states.reshape((shape[0], shape[1] * shape[2]))
+    return states
+
+
+def generate_design_matrix_2(states):
+    """
+    kool
+    """
+    i, j = np.triu_indices(states.shape[1])
+    return states[:, i] * states[:, j]
+
+
+def ising_energies(states):
+    """
+    This function calculates the energies of the states in the nn Ising
+    Hamiltonian
+    """
+    L = states.shape[1]
+    J = np.zeros((L, L),)
+    for i in range(L):
+        J[i, (i + 1) % L] = -1.0  # interaction between nearest-neighbors
+    # compute energies
+    E = np.einsum('...i,ij,...j->...', states, J, states)
+    return E
+
+
+states = np.random.choice([-1, 1], size=(10000, 40))  # random Ising states
+energies = ising_energies(states)  # calculate Ising energies
 
 
 @timer
 def waste_some_time(num_times):
     for _ in range(num_times):
-        sum([i**2 for i in range(10000)])
+        generate_design_matrix_1(states)
+
+
+@timer
+def waste_some_time_2(num_times):
+    for _ in range(num_times):
+        generate_design_matrix_2(states)
 
 
 if __name__ == "__main__":
-    waste_some_time(100)
+    waste_some_time(10)
+    waste_some_time_2(10)
