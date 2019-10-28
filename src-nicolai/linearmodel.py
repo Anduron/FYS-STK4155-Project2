@@ -85,20 +85,6 @@ class ModelTools:
             X = np.c_[np.ones(X.shape[0]), X]
         return X
 
-    def generate_design_matrix(self, states):
-        """
-        kool
-        """
-        i, j = np.triu_indices(states.shape[1])
-        return states[:, i] * states[:, j]
-
-    def generate_labels(L):
-        """
-        Generate labels
-        """
-        l = [f'$s_{i}s_{j}$' for i in range(1, L + 1) for j in range(i, L + 1)]
-        return l
-
     def design_matrix_interacting(self):
         """
         Under construction
