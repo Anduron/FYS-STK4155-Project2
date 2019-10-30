@@ -31,46 +31,56 @@ def generate_1Ddata(L=40, N=10000):
     states = np.einsum('...i,...j->...ij', states, states)
     shape = states.shape
     states = states.reshape((shape[0], shape[1] * shape[2]))
-    return [states, energies]
-
-
-def generate_design_matrix(self, states):
-    """
-    kool
-    """
-    i, j = np.triu_indices(states.shape[1])
-    return states[:, i] * states[:, j]
-
-
-def generate_labels(L):
-    """
-    Generate labels
-    """
-    l = [f'$s_{i}s_{j}$' for i in range(1, L + 1) for j in range(i, L + 1)]
-    return l
+    print(states.shape)
+    return states, energies
 
 
 if __name__ == "__main__":
 
     from linearmodel import OLS, RidgeReg, LassoReg
+    from sklearn.model_selection import train_test_split
     np.random.seed(42)
 
-    L = 40     # system size
-    N = 10000  # number of points
-    data = generate_1Ddata(L, N)
+    L = 4     # system size
+    N = 10  # number of points
+    data, target = generate_1Ddata(L, N)
+    ols = OLS(fit_intercept=False)
+    X_train, X_test, y_train, y_test = ols.split_data(data, target, 0.96)
 
-    # define number of samples
-    n_samples = 400
-    # define train and test data sets
-    X_train = data[0][:n_samples]
-    # + np.random.normal(0,4.0,size=X_train.shape[0])
-    Y_train = data[1][:n_samples]
-    X_test = data[0][n_samples:3 * n_samples // 2]
-    # + np.random.normal(0,4.0,size=X_test.shape[0])
-    Y_test = data[1][n_samples:3 * n_samples // 2]
+    coeff = ols.fit(X_train, y_train)
+    ypredict = ols.predict(X_test)
+    # print(coeff)
+    # print(ypredict[-1])
+    # print(ols.mse)
+    # print(ols.r2)
 
+    """
     model_ols = OLS(fit_intercept=False)      # Initialize model
     model_ols.fit(X_train, Y_train)
     # print(model_ols.mse)
     mse_train = model_ols.mse
     print(mse_train)
+    """
+    def morten():
+        L = 4
+        n = 10
+        spins = np.random.choice([-1, 1], size=(n, L))
+        J = 1.0
+        energies = np.zeros(n)
+        for i in range(n):
+            energies[i] = - J * np.dot(spins[i], np.roll(spins[i], 1))
+        X = np.zeros((n, L ** 2))
+        for i in range(n):
+            X[i] = np.outer(spins[i], spins[i]).ravel()
+        y = energies
+        print(X.shape)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.96)
+        X_train_own = np.concatenate(
+            (np.ones(len(X_train))[:, np.newaxis], X_train),
+            axis=1)
+        X_test_own = np.concatenate(
+            (np.ones(len(X_test))[:, np.newaxis], X_test),
+            axis=1)
+
+    morten()

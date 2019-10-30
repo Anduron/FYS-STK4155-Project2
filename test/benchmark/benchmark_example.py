@@ -1,5 +1,6 @@
-from benchmark_tools import timer
 import numpy as np
+
+from benchmark_tools import timer
 
 
 def generate_design_matrix_1(states):
@@ -7,8 +8,10 @@ def generate_design_matrix_1(states):
     Generate data for 1D Ising model that is optimized for linear regression
     """
     states = np.einsum('...i,...j->...ij', states, states)
+    print(states.shape)
     shape = states.shape
     states = states.reshape((shape[0], shape[1] * shape[2]))
+    print(states.shape)
     return states
 
 
@@ -17,6 +20,8 @@ def generate_design_matrix_2(states):
     kool
     """
     i, j = np.triu_indices(states.shape[1])
+    b = states[:, i] * states[:, j]
+    print(b.shape)
     return states[:, i] * states[:, j]
 
 
@@ -34,7 +39,7 @@ def ising_energies(states):
     return E
 
 
-states = np.random.choice([-1, 1], size=(10000, 40))  # random Ising states
+states = np.random.choice([-1, 1], size=(10, 4))  # random Ising states
 energies = ising_energies(states)  # calculate Ising energies
 
 
@@ -51,5 +56,5 @@ def waste_some_time_2(num_times):
 
 
 if __name__ == "__main__":
-    waste_some_time(10)
-    waste_some_time_2(10)
+    waste_some_time(1)
+    waste_some_time_2(1)
