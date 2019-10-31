@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import scipy.sparse as sp
+from sklearn.utils import resample
 
 
 def ising_energies(states):
@@ -35,20 +36,60 @@ def generate_1Ddata(L=40, N=10000):
     return states, energies
 
 
+def bias_variance(model, X, y, n_bootstraps, ratio):
+    N = X.shape[0]
+    # Hold out some test data that is never used in training.
+    X_train, X_test, y_train, y_test = model.split_data(data, target, ratio)
+    y_test = y_test.reshape(-1, 1)
+
+    # The following (m x n_bootstraps) matrix holds the column vectors y_pred
+    # for each bootstrap iteration.
+    y_pred = np.empty((y_test.shape[0], n_bootstraps))
+    for i in range(n_bootstraps):
+        print(i)
+        X_, y_ = resample(X_train, y_train)
+
+        # Evaluate the new model on the same test data each time.
+        model.fit(X_, y_)
+        y_pred[:, i] = model.predict(X_test).ravel()
+
+    # Note: Expectations and variances taken w.r.t. different training
+    # data sets, hence the axis=1. Subsequent means are taken across the test data
+    # set in order to obtain a total value, but before this we have error/bias/variance
+    # calculated per data point in the test set.
+    # Note 2: The use of keepdims=True is important in the calculation of bias as this
+    # maintains the column vector form. Dropping this yields very unexpected results.
+    print(f'y_test: {y_test.shape}, y_pred: {y_pred.shape}')
+    print(y_pred)
+    print(np.mean(y_pred, axis=1, keepdims=True))
+    error = np.mean(np.mean((y_test - y_pred)**2, axis=1, keepdims=True))
+    bias = np.mean(y - np.mean(y_pred, axis=1, keepdims=True))
+    variance = np.mean(np.var(y_pred, axis=1, keepdims=True))
+    print('Error:', error)
+    print('Bias^2:', bias**2)
+    print('Var:', variance)
+    print(f'{error} >= {bias} + {variance} = {bias + variance}')
+
+
 if __name__ == "__main__":
 
     from linearmodel import OLS, RidgeReg, LassoReg
     from sklearn.model_selection import train_test_split
-    np.random.seed(42)
+    # np.random.seed(42)
 
-    L = 4     # system size
-    N = 10  # number of points
+    L = 5     # system size
+    N = 20  # number of points
     data, target = generate_1Ddata(L, N)
+    target = target + np.random.normal(0, 4.0, size=N)
     ols = OLS(fit_intercept=False)
+    print("split data")
     X_train, X_test, y_train, y_test = ols.split_data(data, target, 0.96)
-
-    coeff = ols.fit(X_train, y_train)
-    ypredict = ols.predict(X_test)
+    # print("fit")
+    # coeff = ols.fit(X_train, y_train)
+    # print("predict")
+    # ypredict = ols.predict(X_test)
+    print("bias-variance")
+    bias_variance(ols, data, target, 20, .2)
     # print(coeff)
     # print(ypredict[-1])
     # print(ols.mse)
@@ -61,26 +102,3 @@ if __name__ == "__main__":
     mse_train = model_ols.mse
     print(mse_train)
     """
-    def morten():
-        L = 4
-        n = 10
-        spins = np.random.choice([-1, 1], size=(n, L))
-        J = 1.0
-        energies = np.zeros(n)
-        for i in range(n):
-            energies[i] = - J * np.dot(spins[i], np.roll(spins[i], 1))
-        X = np.zeros((n, L ** 2))
-        for i in range(n):
-            X[i] = np.outer(spins[i], spins[i]).ravel()
-        y = energies
-        print(X.shape)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.96)
-        X_train_own = np.concatenate(
-            (np.ones(len(X_train))[:, np.newaxis], X_train),
-            axis=1)
-        X_test_own = np.concatenate(
-            (np.ones(len(X_test))[:, np.newaxis], X_test),
-            axis=1)
-
-    morten()
