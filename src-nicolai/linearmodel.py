@@ -20,36 +20,60 @@ class Metrics:
     """
 
     @property
-    def rss(self):
+    def rss_(self):
         """
         return calculated value of rss (residual sum of squares)
         """
-        self.rss_ = np.sum((self.target - self.predict(self.data))**2)
-        return self.rss_
+        self._rss = np.sum((self.target - self.predict(self.data))**2)
+        return self._rss
 
     @property
-    def sst(self):
+    def sst_(self):
         """
         return calculated value of sst (total sum of squares)
         """
-        self.sst_ = np.sum((self.target - np.mean(self.target))**2)
-        return self.sst_
+        self._sst = np.sum((self.target - np.mean(self.target))**2)
+        return self._sst
 
     @property
-    def r2(self):
+    def r2_(self):
         """
         return calculated r2 score
         """
-        self.r2_ = 1 - self.rss / self.sst
-        return self.r2_
+        self._r2 = 1 - self.rss / self.sst
+        return self._r2
 
     @property
-    def mse(self):
+    def mse_(self):
         """
         return calculated value of mse (mean squared error)
         """
-        self.mse_ = np.mean((self.target - self.predict(self.data))**2)
-        return self.mse_
+        self._mse = np.mean((self.target - self.predict(self.data))**2)
+        return self._mse
+
+    def mse(self, data, target):
+        """
+        return calculated value of mse (mean squared error)
+        """
+        return np.mean((target - self.predict(data))**2)
+
+    def rss(self, data, target):
+        """
+        return calculated value of rss (residual sum of squares)
+        """
+        return np.sum((target - self.predict(data))**2)
+
+    def sst(self, target):
+        """
+        return calculated value of sst (total sum of squares)
+        """
+        return np.sum((target - np.mean(target))**2)
+
+    def r2(self, data, target):
+        """
+        return calculated r2 score
+        """
+        return 1 - self.rss(data, target) / self.sst(target)
 
 
 class ModelTools:
@@ -188,6 +212,14 @@ class OLS(Metrics, ModelTools):
             X = X.reshape(-1, 1)
         return self.intercept_ + np.dot(X, self.coef_)
 
+    def score(self, data, target):
+        """
+        """
+
+    def mean_square_error(self, data, target):
+        """
+        """
+
 
 class RidgeReg(Metrics, ModelTools):
     """
@@ -197,7 +229,7 @@ class RidgeReg(Metrics, ModelTools):
     lmbda: regularization (penalty) parameter
     """
 
-    def __init__(self, lmbda, fit_intercept=True):
+    def __init__(self, lmbda=1.0, fit_intercept=True):
         self.coef_ = None
         self.intercept_ = None
         self._lmbda = lmbda
@@ -250,6 +282,9 @@ class RidgeReg(Metrics, ModelTools):
             X = X.reshape(-1, 1)
         return self.intercept_ + np.dot(X, self.coef_)
 
+    def set_penalty(self, lmbda):
+        self._lmbda = lmbda
+
 
 class LassoReg(ModelTools):
     """
@@ -259,7 +294,7 @@ class LassoReg(ModelTools):
     lmbda: regularization (penalty) parameter
     """
 
-    def __init__(self, lmbda, fit_intercept=True):
+    def __init__(self, lmbda=1.0, fit_intercept=True):
         self.coef_ = None
         self.intercept_ = None
         self._lmbda = lmbda
@@ -299,14 +334,23 @@ class LassoReg(ModelTools):
         return ypred
 
     @property
-    def mse(self):
-        self.mse_ = mean_squared_error(self.target, self.predict(self.data))
-        return self.mse_
+    def mse_(self):
+        self._mse = mean_squared_error(self.target, self.predict(self.data))
+        return self._mse
 
     @property
-    def r2(self):
-        self.r2_ = r2_score(self.target, self.predict(self.data))
-        return self.r2_
+    def r2_(self):
+        self._r2 = r2_score(self.target, self.predict(self.data))
+        return self._r2
+
+    def mse(self, data, target):
+        return mean_squared_error(target, self.predict(data))
+
+    def r2(self, data, target):
+        return r2_score(target, self.predict(data))
+
+    def set_penalty(self, lmbda):
+        self._lmbda = lmbda
 
 
 if __name__ == "__main__":
