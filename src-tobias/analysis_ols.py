@@ -8,7 +8,7 @@ from matplotlib import cm
 from matplotlib.ticker import FormatStrFormatter, LinearLocator
 from mpl_toolkits.mplot3d import Axes3D
 from scipy import stats
-from sklearn.utils import resample
+
 
 from linear_regression import *
 from setup import *
@@ -132,8 +132,7 @@ def ols_bias_variance(x, y, generate_design_matrix, n_bootstraps, ratio):
     print(y_pred)
     print(np.mean(y_pred, axis=1, keepdims=True))
     error = np.mean(np.mean((y_test - y_pred)**2, axis=1, keepdims=True))
-    bias = np.mean((y_test - np.mean(y_pred, axis=1, keepdims=True))**2)  # ??
-    bias = np.mean(np.mean((y_pred - y_test), axis=1)**2)  # ??
+    bias = np.mean((y_test - np.mean(y_pred, axis=1, keepdims=True))**2)
     variance = np.mean(np.var(y_pred, axis=1, keepdims=True))
     print('Error:', error)
     print('Bias^2:', bias)
