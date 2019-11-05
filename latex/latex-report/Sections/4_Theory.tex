@@ -96,7 +96,38 @@ SGD
 
 Newton-Raphson's method
 
+Let $A\subseteq\mathbb{R}^n$ and suppose that $f\colon A \to\mathbb{R}^n$ is a differentiable function. If $x_0\in A$, then for $x\in A$ “close” to $x_0$, the function $x\mapsto f(x_0)+Df(x_0)(x-x_0)$ is a good approximation of $f$. Assume that $f$ has a zero close to $x_0$. To try and find this zero, instead of solving $f(x)=0$, we solve the system of linear equations given by
+\begin{equation*}
+  f(x_0)+Df(x_0)(x-x_0) = 0.
+\end{equation*}
+If $Df(x_0)$ is invertible, we get the solution
+\begin{equation*}
+  x_1=x_0-(Df(x_0))^{-1}f(x_0).
+\end{equation*}
+We can hope that $x_1$ is even closer than $x_0$ to the actual zero of $f$. Repeating the process with $x_1$ instead of $x_0$, we find a new approximation
+\begin{equation*}
+  x_2=x_1-(Df(x_1))^{-1}f(x_1).
+\end{equation*}
+If we continue this for all $n\in\mathbb{N}$, we get a sequence $\{x_n\}_{n\in\mathbb{N}}$ where
+\begin{equation*}
+  x_n=x_{n-1}-(Df(x_{n-1}))^{-1}f(x_{n-1}).
+\end{equation*}
+Hopefully the sequence converges to a point $x=\lim_{n\to\infty}$ such that $f(x)=0$. This root-finding algorithm is called the \emph{Newton-Raphson method}.
 
+In general Newton-Raphson is not guaranteed to work. Sufficient conditions are given in the Kantorovich theorem:
+\begin{theorem}
+  Let $f\colon U\to\mathbb{R}^n$ be a differentiable function defined on an open convex subset $U$ of $\mathbb{R}^n$. Assume that the Jacobian $Df$ of $f$ is Lipschitz continuous on $U$, i.e. that there exists an element $M\in\mathbb{R}$ such that
+  \begin{equation*}
+    \norm{Df(x)-Df(y)}\le M\norm{x-y}
+  \end{equation*}
+  for any $x,y\in U$.
+
+Let $x_0\in U$ and suppose that $Df(x_0)$ is invertible. Find a number $K$ with $\norm{Df(x_0)^{-1}}\le K$, and assume that the closed ball $B\left(x_0,\frac{1}{KM}\right)$, with center in $x_0$ and radius $\frac{1}{KM}$ is contained in $U$. If
+\begin{equation*}
+  \norm{x_1-x_0}=\norm{Df(x_0)^{-1}f(x_0)}\le\frac{1}{2KM},
+\end{equation*}
+then $Df(x)$ is invertible for all $x$ in the open ball $B\left(x,\frac{1}{KM}\right)$. If we start Newton-Raphson in $x_0$, then all the points $x_n$ are contained in $B\left(x_0,\frac{1}{KM}\right)$ and the limit $x=\lim_{n\to\infty}x_n$ exists and satisfies $f(x)=0$.
+\end{theorem}
 
 %----------------------------------------------------------------
 \subsection{Neural Network}\label{sec:dnn theory}
