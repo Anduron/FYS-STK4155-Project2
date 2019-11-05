@@ -15,11 +15,78 @@ Motivate
 
 logistic function
 
-MLE -> cross-entropy
+MLE - cross-entropy
 
-binary -> general?
+binary - general?
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Logistic regression can be used to classify instances into different classes by modelling the probability of a certain class or event existing e.g. win/lose, 1/0 etc. 
 
+We look at the case of two classes, positive and negative, corresponding to the outputs $y=1$ and $y=0$.
+
+\textbf{The Sigmoid Function}
+
+In linear regression the output is the weighted sum of inputs. In logistic regression the output is not the weighted sum directly, we rather pass it through an \textit{activation function} that can map any real value between 0 and 1. The activation function is known as the \textit{sigmoid} (or \textit{logit}) function, and is given by
+
+\begin{equation}\label{eq:sigmoid_func}
+    \sigma (t) = \frac{1}{1+ e^{-t}}
+\end{equation}
+
+\autoref{fig:logistic}
+
+\begin{figure}[H]
+\begin{center}\includegraphics[scale=0.6]{latex/figures/logistic_function.pdf}
+\end{center}
+\caption{Logistic}
+\label{fig:logistic}
+\end{figure}
+
+As seen in the figure, the value of the sigmoid function always lies between 0 and 1. The value is exactly 0.5 at $t=0$. Thus, 0.5 can be used as the probability threshold, $p$, to determine the classes. If $p \geq 0.5$ the instance $t$ belongs to the positive class ($y = 1$), or else we classify it as the negative class ($y = 0$).
+
+\textbf{The Logistic Regression Model}
+
+A linear regression model can be represented by
+
+\begin{equation}
+    y = \beta^T X
+\end{equation}
+
+The logistic regression models estimated probability is then
+
+\begin{equation}
+    \hat{p} = \sigma (\beta^T X),
+\end{equation}
+
+and the logistic regression model prediction is hence
+
+\begin{equation}
+\hat{y} = \begin{cases} 0 \quad \text{if } \hat{p} < 0.5 \\ 1 \quad \text{if } \hat{p} \geq 0.5 \end{cases} 
+\end{equation}
+
+\textbf{The Cost Function}
+
+Like for linear regression, we define a cost for our model and the objective will be to minimize the cost.
+
+The cost function of a single training instance can be given by
+
+\begin{equation}
+    C(\beta) = \begin{cases} - \log(\hat{p}) &\quad \text{if } y=1 \\ - \log(1-\hat{p}) &\quad \text{if } y=0  \end{cases}
+\end{equation}
+
+To show that this cost function makes sense, we plot a simplified version with $t=\beta^T X$ below.
+
+\autoref{fig:logistic_cost}
+
+\begin{figure}[H]
+\begin{center}\includegraphics[scale=0.6]{latex/figures/logistic_cost_func.pdf}
+\end{center}
+\caption{Logistic cost}
+\label{fig:logistic_cost}
+\end{figure}
+
+The objective of the cost function is to heavily penalize the model if it predicts a negative class ($y=0$) if the acual class is positve ($y=1$) and vice-versa. 
+
+As seen in the above figure, for $C(\beta) = - \log(\hat{p})$ the cost nears 0 as $\hat{p}$ approaches 1 and as $\hat{p}$ nears 0 the cost goes toward infinity (that is, we penalize the model heavily). Similarly, for $C(\beta) = - \log(1 - \hat{p})$, when the actual value is 0 and the model predicts 0, the cost is 0, an the cost goes toward infinity as $\hat{p}$ approaches 1.
 
 
 %----------------------------------------------------------------
