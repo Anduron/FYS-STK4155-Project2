@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from urllib.request import urlopen
 import numpy as np
 from sklearn.datasets import load_digits

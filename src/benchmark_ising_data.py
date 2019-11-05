@@ -56,5 +56,5 @@ def waste_some_time_2(num_times):
 
 
 if __name__ == "__main__":
-    waste_some_time(1)
-    waste_some_time_2(1)
+    waste_some_time(10)
+    waste_some_time_2(10)
