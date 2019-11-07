@@ -10,6 +10,7 @@
 *.x
 .cache
 .pytest_cache
+*.npy
 
 ### C ###
 # Prerequisites
