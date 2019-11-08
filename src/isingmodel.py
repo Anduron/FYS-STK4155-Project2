@@ -32,6 +32,7 @@ def generate_1Ddata(L=40, N=10000):
     states = np.einsum('...i,...j->...ij', states, states)
     shape = states.shape
     states = states.reshape((shape[0], shape[1] * shape[2]))
+    print(states.shape)
     return states, energies
 
 
