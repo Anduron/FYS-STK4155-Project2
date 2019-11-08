@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
+
+from ml_model_tools import MLModelTools
 
 
-class LogisticRegression:
-    """Linear Regression Using Gradient Descent.
+class LogisticRegression(MLModelTools):
+    """
+    Logistic Regression Using Gradient Descent.
+
     Parameters
     ----------
     eta : float
@@ -41,7 +43,6 @@ class LogisticRegression:
     def fit(self, X, y, method='GD', verbose=False, weights=None):
         """
         """
-        #self.weights_ = np.zeros((X.shape[1], 1))
         self.data = X
         self.target = y
         if weights is not None:
@@ -58,18 +59,12 @@ class LogisticRegression:
         # add bias if fit_intercept
         if self._fit_intercept:
             self.data = np.c_[np.ones(self.data.shape[0]), self.data]
+            self.weights_ = np.zeros(X.shape[1] + 1)
 
         if self._method == 'GD':
             self.GD()
         elif self._method == 'NR':
             self.newton_raphson()
-
-        # set attributes
-        if self._fit_intercept:
-            self.intercept_ = self.weights_[0]
-            self.weights_ = self.weights_[1:]
-        else:
-            self.intercept_ = 0
 
         return self.weights_
 
@@ -79,7 +74,7 @@ class LogisticRegression:
 
     def gradient(self):
         """
-        log-likelihood gradient
+        negative log-likelihood gradient
         """
         return - self.data.T @ (self.target - self.predict_proba(self.data))
 
@@ -127,6 +122,8 @@ class LogisticRegression:
         """
         Logistic regression model prediction
         """
+        if self._fit_intercept:
+            X = np.c_[np.ones(X.shape[0]), X]
         return 1 * (self.predict_proba(X) >= 0.5)
 
     def accuracy(self, X, actual_classes, probab_threshold=0.5):
@@ -146,9 +143,9 @@ if __name__ == "__main__":
     print("GRADIENT DESCENT\n")
     logreg = LogisticRegression()
     logreg.fit(X, y)
+    print(logreg.weights_)
     print(logreg.predict(X))
     print(logreg.log_likelihood())
-    print(logreg.weights_)
     print(logreg.accuracy(X, y))
 
     print("")
