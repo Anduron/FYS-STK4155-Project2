@@ -56,6 +56,10 @@ class CrossEntropy():
         return (y_pred - y) / (y_pred * (1 - y_pred))
 
 
+def mse(y, y_pred):
+    return np.sum((y - y_pred)**2) / y.shape[0]
+
+
 class NeuralNetwork():
 
     def __init__(self, dim, acf, cost):
@@ -93,30 +97,42 @@ class NeuralNetwork():
             self.delta[i - 1] = self.delta[i] @ self.W[i] * \
                 self.acf[i - 1].deriv(self.z[i])
 
-    def train(self, X, y, mu, lamb, batch_size, epochs):
+    def train(self, X, y, X_val, y_val, mu, lamb, batch_size, epochs, accuracy):
         if len(y.shape) == 1:
             y = y[:, np.newaxis]
+
+        if len(y_val.shape) == 1:
+            y_val = y_val[:, np.newaxis]
 
         n = len(y)
         num_iters = int(n / batch_size)
 
-        for e in range(epochs):
+        self.acc_train = []
+        self.acc_val = []
 
-            if e % (epochs / 100) == 0:
-                sys.stdout.write("\r" + "%d" % (100 * e / epochs))
-                sys.stdout.flush()
+        for i in range(epochs):
 
-            for i in range(num_iters):
+            for j in range(num_iters):
                 idx_train = np.random.choice(
                     np.arange(0, n), batch_size, replace=False)
                 self.backward(X[idx_train], y[idx_train])
-                for j in range(len(self.grad)):
-                    self.grad[j] = self.delta[j].T @ self.a[j]
+
+                for k in range(len(self.grad)):
+                    self.grad[k] = self.delta[k].T @ self.a[k]
 
                 self.W -= mu * self.grad + lamb * self.W
 
-                for j in range(len(self.grad)):
-                    self.b[j] -= mu * np.sum(self.delta[j], axis=0)
+                for k in range(len(self.grad)):
+                    self.b[k] -= mu * np.sum(self.delta[k], axis=0)
+
+            y_pred = self.predict(X)
+            self.acc_train.append(accuracy(y, y_pred))
+
+            y_pred = self.predict(X_val)
+            self.acc_val.append(accuracy(y_val, y_pred))
+
+            print(self.acc_train[-1], self.acc_val[-1])
+        print("done")
 
     def predict(self, X):
         self.forward(X)
