@@ -310,8 +310,7 @@ class Lasso(MLModelTools):
 
         Returns
         -------
-        coef_ : array, shape (n_features,)
-            Estimated coefficients for the linear regression problem
+        Estimated coefficients for the linear regression problem : array, shape (n_features,)
         """
 
         self.data = X
@@ -341,8 +340,7 @@ class Lasso(MLModelTools):
 
         Returns
         -------
-        C : array, shape (n_samples,)
-            Predicted values
+        Predicted values : array, shape (n_samples,)
         """
 
         ypred = self.clf.predict(X)
@@ -359,7 +357,7 @@ class Lasso(MLModelTools):
 
         Returns
         -------
-        self
+        object : self
         """
 
         self._lmbda = lmbda
@@ -380,8 +378,7 @@ class Lasso(MLModelTools):
 
         Returns
         -------
-        C : float
-            MSE value
+        MSE value : float
         """
 
         return mean_squared_error(target, self.predict(data))
