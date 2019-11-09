@@ -14,21 +14,27 @@ class LogisticRegression(MLModelTools):
 
     Parameters
     ----------
-    eta : float
-        Learning rate
-    n_iter : int
-        No of passes over the training set
-    lmbda : float
-        Regularization parameter
+    eta : float, optional, default=0.001
+        Learning rate; the amount that the weights are updated during training
+    lmbda : float, optional, default=0.0
+            regularization (penalty) parameter; must be a positive float.
+            Regularization improves the conditioning of the problem and reduces
+            the variance of the estimates. Larger values specify stronger
+            regularization.
+    n_iter : int, optional, default=1000
+        Number of passes over the training set
+    tol : float, optional, default=1e-5
+        Tolerance for stopping criteria
+    fit_intercept : boolean, optional, default=True
+        whether to calculate the intercept for this model. If set to False, no
+        intercept will be used in calculations.
+
     Attributes
     ----------
-    coef_ : Estimated coefficients for the linear regression problem.
-    intercept_ : Independent term in the linear model.
-    w_ : weights/ after fitting the model
-    cost_ : total error of the model after each iteration
+    weights_ : Estimated weights after fitting the model
     """
 
-    def __init__(self, eta=0.0001, lmbda=0.0, n_iter=1000,
+    def __init__(self, eta=0.001, lmbda=0.0, n_iter=1000,
                  tol=1e-5, fit_intercept=True):
         self._eta = eta
         self._lmbda = lmbda
@@ -36,16 +42,51 @@ class LogisticRegression(MLModelTools):
         self._tol = tol
         self._fit_intercept = fit_intercept
         self.weights_ = None
-        self.intercept_ = None
 
     def sigmoid(self, z):
         """
         Activation function; maps any real value between 0 and 1
+
+        Parameters
+        ----------
+        z : array-like, shape = [n_samples, n_features]
+            Real input
+
+        Returns
+        -------
+        Logistic of input : array
         """
+
         return 1 / (1 + np.exp(-z))
 
     def fit(self, X, y, method='GD', verbose=False, weights=None):
         """
+        Fit the model according to the given training data
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix}, shape (n_samples, n_features)
+            Training vector, where n_samples is the number of samples and
+            n_features is the number of features.
+
+        y : array-like, shape (n_samples,)
+            Target vector relative to X.
+
+        method : str, {‘GD’, ‘NR’}, optional, default=‘GD’
+            If the option chosen is ‘GD’ the optimization method is standard
+            Gradient Descent. If the option chosen is ‘NR’ the optimization
+            method is Newton-Raphson.
+
+        verbose : bool, optional, default=False
+            Set verbose to True for verbosity.
+
+        weights : array-like, shape (n_features,), default=None
+            Set initial weights. If default is kept, the initial weights will
+            be set to zero.
+
+        Returns
+        -------
+        Weights of the features in the decision function : array-like, shape (n_features,)
         """
         self.data = X
         self.target = y
@@ -77,31 +118,48 @@ class LogisticRegression(MLModelTools):
         return self.weights_
 
     def log_likelihood(self):
+        """
+        Computes the log-likelihood
+        """
+
         Xbeta = self.data @ self.weights_
         return np.sum(self.target * Xbeta) - np.sum(np.log(1 + np.exp(Xbeta)))
 
     def cost(self):
+        """
+        Logistic model cost function
+        """
+
         p = expit(self.data @ self.weights_)
-        return - np.sum(xlogy(self.target, p) + xlogy(1 - self.target, 1 - p)) + self._lmbda * np.linalg.norm(self.weights_)**2
+        cost_ = - np.sum(xlogy(self.target, p) + xlogy(
+            1 - self.target, 1 - p)) + self._lmbda * np.linalg.norm(
+            self.weights_)**2
+        return cost_
 
     def gradient(self):
         """
-        negative log-likelihood gradient
+        Compute negative log-likelihood gradient
         """
-        return - self.data.T @ (self.target - self.predict_proba(self.data)) + 2 * self._lmbda * self.weights_
+        gradient_ = - self.data.T @ (self.target - self.predict_proba(
+            self.data)) + 2 * self._lmbda * self.weights_
+        return gradient_
 
     def hessian(self):
         """
-        negative log-likelihood hessian
+        Compute negative log-likelihood hessian
         """
+
         P = self.predict_proba(self.data)
         W = np.diag(P * (1 - P))
-        return self.data.T @ W @ self.data + np.diag(2 * self._lmbda * np.ones(self.weights_.size))
+        hessian_ = self.data.T @ W @ self.data + \
+            np.diag(2 * self._lmbda * np.ones(self.weights_.size))
+        return hessian_
 
     def GD(self):
         """
-        Gradient descent
+        Gradient descent method
         """
+
         if self._verbose:
             print(f'Initial weights: {self.weights_}')
         for i in range(self._n_iter):
@@ -122,7 +180,9 @@ class LogisticRegression(MLModelTools):
 
     def newton_raphson(self):
         """
+        Newton-Raphson method
         """
+
         if self._verbose:
             print(f'Initial weights: {self.weights_}')
 
@@ -148,21 +208,55 @@ class LogisticRegression(MLModelTools):
 
     def predict_proba(self, X):
         """
-        Returns the probability after passing through sigmoid
+        Probability estimates
+
+        Parameters
+        ----------
+        X : array, shape (n_samples) or shape (n_samples, n_features)
+            Data samples
+
+        Returns
+        -------
+        Returns the probability after passing through sigmoid : array, shape (n_samples, n_classes)
         """
+
         return self.sigmoid(X @ self.weights_)
 
     def predict(self, X):
         """
-        Logistic regression model prediction
+        Predict class labels for samples in X.
+
+        Parameters
+        ----------
+        X : array, shape (n_samples) or shape (n_samples, n_features)
+            Data samples
+
+        Returns
+        -------
+        Predicted class label per sample : array, shape (n_samples)
         """
+
         if self._fit_intercept:
             X = np.c_[np.ones(X.shape[0]), X]
         return 1 * (self.predict_proba(X) >= 0.5)
 
     def accuracy(self, X, actual_classes, probab_threshold=0.5):
-        predicted_classes = (self.predict(X) >=
-                             probab_threshold).astype(int)
+        """
+        Compute mean accuracy on the given test data and labels.
+
+        Parameters
+        ----------
+        X : array-like, shape (n_samples, n_features)
+            Test samples.
+
+        actual_classes : array-like, shape (n_samples)
+            True labels for X.
+
+        Returns
+        -------
+        Mean accuracy of predict(X) wrt. actual classes : float
+        """
+        predicted_classes = (self.predict(X) >= probab_threshold).astype(int)
         predicted_classes = predicted_classes.flatten()
         accuracy = np.mean(predicted_classes == actual_classes)
         return accuracy * 100
