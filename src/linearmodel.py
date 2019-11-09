@@ -266,12 +266,6 @@ class Ridge(StatMetrics, MLModelTools):
 
 class Lasso(MLModelTools):
     """
-    Linear model class that fit and predict
-
-    Arguments (constructor):
-    lmbda: regularization (penalty) parameter
-    """
-    """
     Linear Model Using LASSO Regression. Wraps sklearn's LASSO regression.
     Subclass of MLModelTools.
 
@@ -293,9 +287,6 @@ class Lasso(MLModelTools):
     r2_ : Coefficient of determination
     mse_ : Mean equared error
 
-    Raises
-    ------
-
     Methods
     -------
     fit(self, X, y)     Fit the model according to the given training data.
@@ -303,14 +294,6 @@ class Lasso(MLModelTools):
     set_lmbda(lmbda)  Set regularization parameter
     r2(data, target)    Calculate coefficient of determination of given input
     mse(data, target)   Calculate mean squared error of given input
-
-    Inherited Methods
-    -----------------
-    From MLModelTools (only a selection of methods; see parent class for all):
-
-    split_data(data, target, test_ratio=0.2)    Split given data and target
-                                                into train and test sets for
-                                                a given test set ratio.
     """
 
     def __init__(self, lmbda=1.0, fit_intercept=True):
