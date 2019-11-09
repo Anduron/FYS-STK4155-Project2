@@ -82,7 +82,7 @@ class LogisticRegression(MLModelTools):
 
     def cost(self):
         p = expit(self.data @ self.weights_)
-        return np.sum(xlogy(self.target, p) + xlogy(1 - self.target, 1 - p))
+        return - np.sum(xlogy(self.target, p) + xlogy(1 - self.target, 1 - p)) + self._lmbda * np.linalg.norm(self.weights_)**2
 
     def gradient(self):
         """
@@ -174,17 +174,17 @@ if __name__ == "__main__":
     X = iris["data"][:, :2]  # petal width
     y = (iris["target"] != 0) * 1  # 1 if Iris-Virginica, else 0
 
-    print("GRADIENT DESCENT\n")
-    logreg = LogisticRegression(lmbda=0, eta=0.0001, n_iter=1000)
-    logreg.fit(X, y, verbose=True)
-    print(logreg.weights_)
-    print(logreg.predict(X))
-    print(logreg.log_likelihood())
-    print(logreg.accuracy(X, y))
+    # print("GRADIENT DESCENT\n")
+    # logreg = LogisticRegression(lmbda=0, eta=0.0001, n_iter=1000)
+    # logreg.fit(X, y, verbose=True)
+    # print(logreg.weights_)
+    # print(logreg.predict(X))
+    # print(logreg.log_likelihood())
+    # print(logreg.accuracy(X, y))
 
     print("")
     print("NEWTON-RAPHSON\n")
-    logreg = LogisticRegression(n_iter=10)
+    logreg = LogisticRegression(n_iter=10, lmbda=0.1)
     weights = np.zeros(X.shape[1] + 1)
     logreg.fit(X, y, method='NR', verbose=True, weights=weights)
     print(logreg.predict(X))
