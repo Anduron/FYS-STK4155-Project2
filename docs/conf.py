@@ -12,8 +12,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('../'))
+sys.path.insert(0, os.path.abspath('../src'))
 
 
 # -- Project information -----------------------------------------------------
@@ -39,7 +38,8 @@ extensions = [
 
 autodoc_mock_imports = ['numpy', 'matplotlib', 'mpl_toolkits', 'functools',
                         'sklearn', 'scipy', 'sys', 'os', 'platform', 'time'
-                        'pickle', 'urllib']
+                        'pickle', 'urllib', 'benchmark_ising_data',
+                        'project_tools', 'test_models']
 
 napoleon_google_docstring = False
 napoleon_use_param = False
