@@ -8,7 +8,7 @@ from ml_model_tools import MLModelTools
 
 class LogisticRegression(MLModelTools):
     """
-    Logistic Regression Using Gradient Descent.
+    Logistic Regression Using Optimization or Gradient Methods
 
     Parameters
     ----------
@@ -16,6 +16,7 @@ class LogisticRegression(MLModelTools):
         Learning rate
     n_iter : int
         No of passes over the training set
+
     Attributes
     ----------
     coef_ : Estimated coefficients for the linear regression problem.
@@ -45,21 +46,25 @@ class LogisticRegression(MLModelTools):
         """
         self.data = X
         self.target = y
-        if weights is not None:
-            self.weights_ = weights
-        else:
-            self.weights_ = np.zeros(X.shape[1])
-        self._method = method
-        self._verbose = verbose
 
         # check if X is 1D or 2D array
         if len(self.data.shape) == 1:
             self.data = self.data.reshape(-1, 1)
 
+        if weights is not None:
+            self.weights_ = weights
+        else:
+            if self._fit_intercept:
+                self.weights_ = np.zeros(X.shape[1] + 1)
+            else:
+                self.weights_ = np.zeros(X.shape[1])
+
+        self._method = method
+        self._verbose = verbose
+
         # add bias if fit_intercept
         if self._fit_intercept:
             self.data = np.c_[np.ones(self.data.shape[0]), self.data]
-            self.weights_ = np.zeros(X.shape[1] + 1)
 
         if self._method == 'GD':
             self.GD()
@@ -151,7 +156,7 @@ if __name__ == "__main__":
     print("")
     print("NEWTON-RAPHSON\n")
     logreg = LogisticRegression(n_iter=10)
-    logreg.fit(X, y, method='NR', verbose=True)
+    logreg.fit(X, y, method='NR')
     print(logreg.predict(X))
     print(logreg.log_likelihood())
     print(logreg.weights_)
