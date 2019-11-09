@@ -12,7 +12,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../src'))
+sys.path.insert(0, os.path.abspath('..'))
 
 
 # -- Project information -----------------------------------------------------
@@ -30,7 +30,14 @@ author = 'Kristian, Nicolai, Tobias'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.napoleon',
 ]
+
+
+autodoc_mock_imports = ['numpy', 'matplotlib', 'mpl_toolkits',
+                        'sklearn', 'scipy', 'sys', 'os']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
