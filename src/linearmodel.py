@@ -282,10 +282,14 @@ class Lasso(MLModelTools):
 
     Attributes
     ----------
-    coef_ : Estimated coefficients for the linear regression problem.
-    intercept_ : Independent term in the linear model.
-    r2_ : Coefficient of determination
-    mse_ : Mean equared error
+    coef_ : array, shape (n_features,)
+        Estimated coefficients for the linear regression problem
+    intercept_ : float
+        Independent term in the linear model
+    r2_ : float
+        Coefficient of determination
+    mse_ : float
+        Mean squared error
     """
 
     def __init__(self, lmbda=1.0, fit_intercept=True):
@@ -341,6 +345,7 @@ class Lasso(MLModelTools):
         C : array, shape (n_samples,)
             Predicted values
         """
+
         ypred = self.clf.predict(X)
         return ypred
 
