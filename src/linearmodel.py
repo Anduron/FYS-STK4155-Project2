@@ -267,7 +267,6 @@ class Ridge(StatMetrics, MLModelTools):
 class Lasso(MLModelTools):
     """
     Linear Model Using LASSO Regression. Wraps sklearn's LASSO regression.
-    Subclass of MLModelTools.
 
     Parameters
     ----------
@@ -282,7 +281,7 @@ class Lasso(MLModelTools):
 
     Attributes
     ----------
-    coef_ : array, shape (n_features,)
+    coef_ : array, shape = (n_features,)
         Estimated coefficients for the linear regression problem
     intercept_ : float
         Independent term in the linear model
@@ -402,8 +401,7 @@ class Lasso(MLModelTools):
 
         Returns
         -------
-        C : float
-            R2 score value
+        R2 score value : float
         """
 
         return r2_score(target, self.predict(data))
