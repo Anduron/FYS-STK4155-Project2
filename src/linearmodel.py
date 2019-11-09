@@ -11,8 +11,7 @@ from statistical_metrics import StatMetrics
 
 class OLS(StatMetrics, MLModelTools):
     """
-    Linear Model Using Ordinary Least Squares (OLS). Subclass of StatMetrics
-    and MLModelTools.
+    Linear Model Using Ordinary Least Squares (OLS).
 
     Parameters
     ----------
@@ -24,36 +23,6 @@ class OLS(StatMetrics, MLModelTools):
     ----------
     coef_ : Estimated coefficients for the linear regression problem.
     intercept_ : Independent term in the linear model.
-
-    Raises
-    ------
-
-    Inherited Attributes
-    --------------------
-    rss_ : Residual sum of squares (StatMetrics)
-    sst_ : Total sum of squares (StatMetrics)
-    r2_ : Coefficient of determination (StatMetrics)
-    mse_ : Mean equared error (StatMetrics)
-
-    Methods
-    -------
-    fit(self, X, y)     Fit the model according to the given training data.
-    predict(self, X)    Predicts the value after the model has been trained.
-
-    Inherited Methods
-    -----------------
-    From StatMetrics:
-
-    rss(data, target)   Calculate residual sum of squares of given input
-    sst(target):        Calculate total sum of squares of given input
-    r2(data, target)    Calculate coefficient of determination of given input
-    mse(data, target)   Calculate mean squared error of given input
-
-    From MLModelTools (only a selection of methods; see parent class for all):
-
-    split_data(data, target, test_ratio=0.2)    Split given data and target
-                                                into train and test sets for
-                                                a given test set ratio.
     """
 
     def __init__(self, fit_intercept=True):
@@ -74,8 +43,7 @@ class OLS(StatMetrics, MLModelTools):
 
         Returns
         -------
-        coef_ : array, shape (n_features,)
-            Estimated coefficients for the linear regression problem
+        Estimated coefficients for the linear regression problem : array, shape (n_features,)
         """
 
         self.data = X
@@ -116,8 +84,7 @@ class OLS(StatMetrics, MLModelTools):
 
         Returns
         -------
-        C : array, shape (n_samples,)
-            Predicted values
+        Predicted values : array, shape (n_samples,)
         """
 
         if len(X.shape) == 1:
@@ -127,8 +94,7 @@ class OLS(StatMetrics, MLModelTools):
 
 class Ridge(StatMetrics, MLModelTools):
     """
-    Linear Model Using Ridge Regression. Subclass of StatMetrics and
-    MLModelTools.
+    Linear Model Using Ridge Regression.
 
     Parameters
     ----------
@@ -145,37 +111,6 @@ class Ridge(StatMetrics, MLModelTools):
     ----------
     coef_ : Estimated coefficients for the linear regression problem.
     intercept_ : Independent term in the linear model.
-
-    Raises
-    ------
-
-    Inherited Attributes
-    --------------------
-    rss_ : Residual sum of squares (StatMetrics)
-    sst_ : Total sum of squares (StatMetrics)
-    r2_ : Coefficient of determination (StatMetrics)
-    mse_ : Mean equared error (StatMetrics)
-
-    Methods
-    -------
-    fit(self, X, y)     Fit the model according to the given training data.
-    predict(self, X)    Predicts the value after the model has been trained.
-    set_lmbda(lmbda)  Set regularization parameter
-
-    Inherited Methods
-    -----------------
-    From StatMetrics:
-
-    rss(data, target)   Calculate residual sum of squares of given input
-    sst(target):        Calculate total sum of squares of given input
-    r2(data, target)    Calculate coefficient of determination of given input
-    mse(data, target)   Calculate mean squared error of given input
-
-    From MLModelTools (only a selection of methods; see parent class for all):
-
-    split_data(data, target, test_ratio=0.2)    Split given data and target
-                                                into train and test sets for
-                                                a given test set ratio.
     """
 
     def __init__(self, lmbda=1.0, fit_intercept=True):
@@ -197,8 +132,7 @@ class Ridge(StatMetrics, MLModelTools):
 
         Returns
         -------
-        coef_ : array, shape (n_features,)
-            Estimated coefficients for the linear regression problem
+        Estimated coefficients for the linear regression problem : array, shape (n_features,)
         """
 
         self.data = X
@@ -240,8 +174,7 @@ class Ridge(StatMetrics, MLModelTools):
 
         Returns
         -------
-        C : array, shape (n_samples,)
-            Predicted values
+        Predicted values : array, shape (n_samples,)
         """
         if len(X.shape) == 1:
             X = X.reshape(-1, 1)
@@ -258,7 +191,7 @@ class Ridge(StatMetrics, MLModelTools):
 
         Returns
         -------
-        self
+        object : self
         """
         self._lmbda = lmbda
         return self
@@ -281,7 +214,7 @@ class Lasso(MLModelTools):
 
     Attributes
     ----------
-    coef_ : array, shape = (n_features,)
+    coef_ : array, shape (n_features,)
         Estimated coefficients for the linear regression problem
     intercept_ : float
         Independent term in the linear model
@@ -303,9 +236,9 @@ class Lasso(MLModelTools):
 
         Parameters
         ----------
-        X : array, shape = (n_samples) or shape = (n_samples, n_features)
+        X : array, shape (n_samples) or shape (n_samples, n_features)
             Training samples
-        y : array, shape = (n_samples)
+        y : array, shape (n_samples)
             Target values
 
         Returns
@@ -357,7 +290,7 @@ class Lasso(MLModelTools):
 
         Returns
         -------
-        object : self
+        self : object
         """
 
         self._lmbda = lmbda
