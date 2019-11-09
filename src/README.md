@@ -1,6 +1,8 @@
-Source code developed for the project.
+# Source code developed for the project
 
-Documentation: [https://fys-stk4155-project2.readthedocs.io/en/latest/](https://fys-stk4155-project2.readthedocs.io/en/latest/)
+### Documentation
+
+[https://fys-stk4155-project2.readthedocs.io/en/latest/](https://fys-stk4155-project2.readthedocs.io/en/latest/)
 
 ### Contents :shipit:
 

@@ -16,6 +16,10 @@ The __[resources folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree
 
 The __[src folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/src)__ contains the source code, unit tests and benchmarks. For details, see the __[src readme](https://github.com/nicolossus/FYS-STK4155-Project2/blob/master/src/README.md)__.
 
+### Documentation
+
+[https://fys-stk4155-project2.readthedocs.io/en/latest/](https://fys-stk4155-project2.readthedocs.io/en/latest/)
+
 ### Usage
 
 Execute unit tests of the implementations by `cd` into the project root folder and run `bash run.sh` in terminal.
