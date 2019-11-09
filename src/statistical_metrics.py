@@ -18,17 +18,6 @@ class StatMetrics:
         coefficient of determination
     mse_ : float
         mean squared error
-
-    Methods
-    ----------
-    rss(data, target)
-        Calculate residual sum of squares of given input
-    sst(target)
-        Calculate total sum of squares of given input
-    r2(data, target)
-        Calculate coefficient of determination of given input
-    mse(data, target)
-        Calculate mean squared error of given input
     """
 
     def rss(self, data, target):
@@ -45,8 +34,7 @@ class StatMetrics:
 
         Returns
         -------
-        C : float
-            RSS value
+        RSS value : float
         """
 
         return np.sum((target - self.predict(data))**2)
@@ -64,8 +52,7 @@ class StatMetrics:
 
         Returns
         -------
-        C : float
-            SST value
+        SST value : float
         """
 
         return np.sum((target - np.mean(target))**2)
@@ -85,8 +72,7 @@ class StatMetrics:
 
         Returns
         -------
-        C : float
-            R2 score value
+        R2 score value : float
         """
 
         return 1 - self.rss(data, target) / self.sst(target)
@@ -106,8 +92,7 @@ class StatMetrics:
 
         Returns
         -------
-        C : float
-            MSE value
+        MSE value : float
         """
 
         return np.mean((target - self.predict(data))**2)

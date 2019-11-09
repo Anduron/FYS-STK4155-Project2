@@ -31,7 +31,8 @@ class LogisticRegression(MLModelTools):
 
     Attributes
     ----------
-    weights_ : Estimated weights after fitting the model
+    weights_ : array, shape (n_features,)
+        Estimated weights after fitting the model
     """
 
     def __init__(self, eta=0.001, lmbda=0.0, n_iter=1000,

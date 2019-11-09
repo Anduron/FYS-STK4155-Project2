@@ -11,15 +11,6 @@ from mpl_toolkits.mplot3d import Axes3D
 class MLModelTools:
     """
     Tools for Machine Learning Models
-
-    Methods
-    ----------
-    split_data(data, target, test_ratio)
-        Split data into training and test sets.
-    frankeFunction(x, y)
-        Franke's bivariate test function
-    plotFranke()
-        Plot Franke's function for x,y in [0, 1]
     """
 
     def split_data(self, data, target, test_ratio=0.2):
@@ -59,33 +50,6 @@ class MLModelTools:
         train_indices = shuffled_indices[test_set_size:]
         return data[train_indices], data[test_indices], target[train_indices], target[test_indices]
 
-    def design_matrix(self):
-        """
-        Redundant atm
-        """
-
-        # check if X is 1D or 2D array
-        if len(self.data.shape) == 1:
-            X = self.data.reshape(-1, 1)
-        else:
-            X = self.data
-        # add bias if fit_intercept
-        if self._fit_intercept:
-            X = np.c_[np.ones(X.shape[0]), X]
-        return X
-
-    def design_matrix_interacting(self):
-        """
-        WIP
-        """
-        pass
-
-    def normalize_design_matrix(self):
-        """
-        WIP
-        """
-        pass
-
     def frankeFunction(self, x, y):
         """
         Franke's bivariate test function – a widely used test function in
@@ -100,8 +64,7 @@ class MLModelTools:
 
         Returns
         -------
-        C : array, shape (n_samples, n_samples)
-            2D Franke's functional values
+        2D Franke's functional values : array, shape (n_samples, n_samples)
         """
 
         term1 = 0.75 * np.exp(-(0.25 * (9 * x - 2)**2) -

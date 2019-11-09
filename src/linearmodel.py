@@ -21,8 +21,10 @@ class OLS(StatMetrics, MLModelTools):
 
     Attributes
     ----------
-    coef_ : Estimated coefficients for the linear regression problem.
-    intercept_ : Independent term in the linear model.
+    coef_ : array, shape (n_features,)
+        Estimated coefficients for the linear regression problem
+    intercept_ : float
+        Independent term in the linear model
     """
 
     def __init__(self, fit_intercept=True):
@@ -109,8 +111,10 @@ class Ridge(StatMetrics, MLModelTools):
 
     Attributes
     ----------
-    coef_ : Estimated coefficients for the linear regression problem.
-    intercept_ : Independent term in the linear model.
+    coef_ : array, shape (n_features,)
+        Estimated coefficients for the linear regression problem
+    intercept_ : float
+        Independent term in the linear model
     """
 
     def __init__(self, lmbda=1.0, fit_intercept=True):
