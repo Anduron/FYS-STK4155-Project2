@@ -115,7 +115,8 @@ class LogisticRegression(MLModelTools):
                 print(f'L2 change {dL2}')
                 print(f'Log likelihood: {self.log_likelihood()}')
                 print(f'Cost: {self.cost()}')
-                print(f'Accuracy: {self.accuracy(self.data, self.target)}')
+                print(
+                    f'Accuracy: {self.accuracy(self.data[:,1:], self.target)}')
             if dL2 < self._tol or self.weights_[0] != self.weights_[0]:
                 break
 
@@ -140,7 +141,8 @@ class LogisticRegression(MLModelTools):
                 print(f'L2 change {dL2}')
                 print(f'Log likelihood: {self.log_likelihood()}')
                 print(f'Cost: {self.cost()}')
-                print(f'Accuracy: {self.accuracy(self.data, self.target)}')
+                print(
+                    f'Accuracy: {self.accuracy(self.data[:,1:], self.target)}')
             if dL2 < self._tol or self.weights_[0] != self.weights_[0]:
                 break
 
@@ -173,7 +175,7 @@ if __name__ == "__main__":
     y = (iris["target"] != 0) * 1  # 1 if Iris-Virginica, else 0
 
     print("GRADIENT DESCENT\n")
-    logreg = LogisticRegression(lmbda=0, eta=0.0001, n_iter=10)
+    logreg = LogisticRegression(lmbda=0, eta=0.0001, n_iter=1000)
     logreg.fit(X, y, verbose=True)
     print(logreg.weights_)
     print(logreg.predict(X))
@@ -182,9 +184,8 @@ if __name__ == "__main__":
 
     print("")
     print("NEWTON-RAPHSON\n")
-    logreg = LogisticRegression(n_iter=1)
+    logreg = LogisticRegression(n_iter=10)
     weights = np.zeros(X.shape[1] + 1)
-    weights[0] = 1
     logreg.fit(X, y, method='NR', verbose=True, weights=weights)
     print(logreg.predict(X))
     print(logreg.log_likelihood())
