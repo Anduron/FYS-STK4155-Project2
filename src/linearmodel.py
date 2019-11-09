@@ -286,14 +286,6 @@ class Lasso(MLModelTools):
     intercept_ : Independent term in the linear model.
     r2_ : Coefficient of determination
     mse_ : Mean equared error
-
-    Methods
-    -------
-    fit(self, X, y)     Fit the model according to the given training data.
-    predict(self, X)    Predicts the value after the model has been trained.
-    set_lmbda(lmbda)  Set regularization parameter
-    r2(data, target)    Calculate coefficient of determination of given input
-    mse(data, target)   Calculate mean squared error of given input
     """
 
     def __init__(self, lmbda=1.0, fit_intercept=True):
