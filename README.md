@@ -6,15 +6,15 @@ In this project, we first use linear regression to determine the value of the co
 
 ### Structure
 
-The [latex folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/latex) contains the LaTeX source for building the report, as well as [figures](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/latex/figures) and [tables](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/tables) generated in the analyses.
+The __[latex folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/latex)__ contains the LaTeX source for building the report, as well as __[figures](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/latex/figures)__ and __[tables](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/tables)__ generated in the analyses.
 
-The [notebooks folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/notebooks) contains Jupyter notebooks used in the analyses. For details, see the [notebooks readme](https://github.com/nicolossus/FYS-STK4155-Project2/blob/master/notebooks/README.md).
+The __[notebooks folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/notebooks)__ contains Jupyter notebooks used in the analyses. For details, see the __[notebooks readme](https://github.com/nicolossus/FYS-STK4155-Project2/blob/master/notebooks/README.md)__.
 
-The [report folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/report) contains the report rendered to PDF from the LaTeX source.
+The __[report folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/report)__ contains the report rendered to PDF from the LaTeX source.
 
-The [resources folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/resources) contains project resources such as supporting material, raw data to be analysed, etc.
+The __[resources folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/resources)__ contains project resources such as supporting material, raw data to be analysed, etc.
 
-The [src folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/src) contains the source code, unit tests and benchmarks. For details, see the [src readme](https://github.com/nicolossus/FYS-STK4155-Project2/blob/master/src/README.md).
+The __[src folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/src)__ contains the source code, unit tests and benchmarks. For details, see the __[src readme](https://github.com/nicolossus/FYS-STK4155-Project2/blob/master/src/README.md)__.
 
 ### Usage
 
