@@ -10,7 +10,7 @@ Welcome to FYS-STK4155 Project 2's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   modules
+   src
 
 
 
