@@ -3,6 +3,8 @@
 
 import numpy as np
 
+from scipy.special import expit
+from scipy.special import xlogy
 from ml_model_tools import MLModelTools
 
 
@@ -16,7 +18,8 @@ class LogisticRegression(MLModelTools):
         Learning rate
     n_iter : int
         No of passes over the training set
-
+    lmbda : float
+        Regularization parameter
     Attributes
     ----------
     coef_ : Estimated coefficients for the linear regression problem.
@@ -77,23 +80,44 @@ class LogisticRegression(MLModelTools):
         Xbeta = self.data @ self.weights_
         return np.sum(self.target * Xbeta) - np.sum(np.log(1 + np.exp(Xbeta)))
 
+    def cost(self):
+        p = expit(self.data @ self.weights_)
+        return np.sum(xlogy(self.target, p) + xlogy(1 - self.target, 1 - p))
+
     def gradient(self):
         """
         negative log-likelihood gradient
         """
-        return - self.data.T @ (self.target - self.predict_proba(self.data))
+        return - self.data.T @ (self.target - self.predict_proba(self.data)) + 2 * self._lmbda * self.weights_
 
     def hessian(self):
+        """
+        negative log-likelihood hessian
+        """
         P = self.predict_proba(self.data)
         W = np.diag(P * (1 - P))
-        return self.data.T @ W @ self.data
+        return self.data.T @ W @ self.data + np.diag(2 * self._lmbda * np.ones(self.weights_.size))
 
     def GD(self):
         """
         Gradient descent
         """
-        for _ in range(self._n_iter):
-            self.weights_ -= self._eta * self.gradient()
+        if self._verbose:
+            print(f'Initial weights: {self.weights_}')
+        for i in range(self._n_iter):
+            weights_old = self.weights_
+            self.weights_ = weights_old - self._eta * self.gradient()
+            dL2 = np.linalg.norm(self.weights_ - weights_old)
+            if self._verbose:
+                print(f'Iteration no: {i}')
+                print(f'New weights: {self.weights_}')
+                print(f'L2 norm of weights: {np.linalg.norm(self.weights_)}')
+                print(f'L2 change {dL2}')
+                print(f'Log likelihood: {self.log_likelihood()}')
+                print(f'Cost: {self.cost()}')
+                print(f'Accuracy: {self.accuracy(self.data, self.target)}')
+            if dL2 < self._tol or self.weights_[0] != self.weights_[0]:
+                break
 
     def newton_raphson(self):
         """
@@ -111,9 +135,12 @@ class LogisticRegression(MLModelTools):
                 # print(gradient.shape, hessian.shape)
                 # print(f'gradient: {gradient}')
                 # print(f'hessian: {hessian}')
-                print(f'New beta: {self.weights_}')
-                print(f'Log likelihood: {self.log_likelihood()}')
+                print(f'New weight: {self.weights_}')
+                print(f'L2 norm of weights: {np.linalg.norm(self.weights_)}')
                 print(f'L2 change {dL2}')
+                print(f'Log likelihood: {self.log_likelihood()}')
+                print(f'Cost: {self.cost()}')
+                print(f'Accuracy: {self.accuracy(self.data, self.target)}')
             if dL2 < self._tol or self.weights_[0] != self.weights_[0]:
                 break
 
@@ -146,8 +173,8 @@ if __name__ == "__main__":
     y = (iris["target"] != 0) * 1  # 1 if Iris-Virginica, else 0
 
     print("GRADIENT DESCENT\n")
-    logreg = LogisticRegression()
-    logreg.fit(X, y)
+    logreg = LogisticRegression(lmbda=0, eta=0.0001, n_iter=10)
+    logreg.fit(X, y, verbose=True)
     print(logreg.weights_)
     print(logreg.predict(X))
     print(logreg.log_likelihood())
@@ -155,9 +182,17 @@ if __name__ == "__main__":
 
     print("")
     print("NEWTON-RAPHSON\n")
-    logreg = LogisticRegression(n_iter=10)
-    logreg.fit(X, y, method='NR')
+    logreg = LogisticRegression(n_iter=1)
+    weights = np.zeros(X.shape[1] + 1)
+    weights[0] = 1
+    logreg.fit(X, y, method='NR', verbose=True, weights=weights)
     print(logreg.predict(X))
     print(logreg.log_likelihood())
     print(logreg.weights_)
     print(logreg.accuracy(X, y))
+
+    # weights = np.zeros(X.shape[1] + 1)
+    # for i in range(10):
+    #     weights = logreg.fit(X, y, method='NR', verbose=True, weights=weights)
+    #     train_accuracy = logreg.accuracy(X, y)
+    #     print('NR: %0.4f' % (train_accuracy))
