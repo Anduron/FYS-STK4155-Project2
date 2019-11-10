@@ -62,7 +62,7 @@ def bias_variance(model, data, target, n_bootstraps, test_ratio, lmbda=None, ver
     # unexpected results.
 
     error = np.mean(np.mean((y_test - y_pred)**2, axis=1, keepdims=True))
-    bias = np.mean(y_test - np.mean(y_pred, axis=1, keepdims=True))**2
+    bias = np.mean((y_test - np.mean(y_pred, axis=1, keepdims=True))**2)
     variance = np.mean(np.var(y_pred, axis=1, keepdims=True))
 
     if verbose:
