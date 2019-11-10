@@ -257,10 +257,28 @@ class LogisticRegression(MLModelTools):
         -------
         Mean accuracy of predict(X) wrt. actual classes : float
         """
+
         predicted_classes = (self.predict(X) >= probab_threshold).astype(int)
         predicted_classes = predicted_classes.flatten()
         accuracy = np.mean(predicted_classes == actual_classes)
         return accuracy * 100
+
+    def set_penalty(self, lmbda):
+        """
+        Set regularization parameter.
+
+        Parameters
+        ----------
+        lmbda : float
+            Value of regularization parameter
+
+        Returns
+        -------
+        object : self
+        """
+
+        self._lmbda = lmbda
+        return self
 
 
 if __name__ == "__main__":
