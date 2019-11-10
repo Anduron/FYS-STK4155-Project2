@@ -6,6 +6,8 @@ In this project, we first use linear regression to determine the value of the co
 
 ### Structure
 
+The __[docs folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/docs)__ contains files for generating source code documentation.
+
 The __[latex folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/latex)__ contains the LaTeX source for building the report, as well as __[figures](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/latex/figures)__ and __[tables](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/tables)__ generated in the analyses.
 
 The __[notebooks folder](https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/notebooks)__ contains Jupyter notebooks used in the analyses. For details, see the __[notebooks readme](https://github.com/nicolossus/FYS-STK4155-Project2/blob/master/notebooks/README.md)__.
