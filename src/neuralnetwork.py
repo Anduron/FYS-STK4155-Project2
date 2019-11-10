@@ -131,9 +131,6 @@ class NeuralNetwork():
             y_pred = self.predict(X_val)
             self.acc_val.append(accuracy(y_val, y_pred))
 
-            print(self.acc_train[-1], self.acc_val[-1])
-        print("done")
-
     def predict(self, X):
         self.forward(X)
         return self.a[-1]
