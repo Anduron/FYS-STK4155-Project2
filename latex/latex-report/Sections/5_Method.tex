@@ -3,6 +3,29 @@
 %================================================================
 
 %----------------------------------------------------------------
-\subsection{Project Method 1}\label{sec:project method}
+\subsection{Producing Data for 1D Ising Model}\label{sec:method datagen}
+%----------------------------------------------------------------
+
+Recast to Linreg problem 
+
+Generate data
+System size $L=40$ and $N=10\,000$ number of points. 
+Split data into 4\% training and 96\% test sets.
+
+%----------------------------------------------------------------
+\subsection{Learning the Ising Hamiltonian with Linear Regression}\label{sec:method linreg}
+%----------------------------------------------------------------
+Perform OLS, Ridge, Lasso regression to estimate the coupling constant
+
+Assess models: 
+$R^2$ score and MSE as measures of performance
+Bias-variance analysis using bootstrap
+
+%----------------------------------------------------------------
+\subsection{Identifying 2D Ising Model Phases with Logistic Regression}\label{sec:method logreg}
+%----------------------------------------------------------------
+
+%----------------------------------------------------------------
+\subsection{Identifying 2D Ising Model Phases with Neural Networks}\label{sec:method NN}
 %----------------------------------------------------------------
 

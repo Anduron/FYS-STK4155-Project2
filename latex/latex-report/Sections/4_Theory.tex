@@ -7,7 +7,9 @@
 %----------------------------------------------------------------
 Brief overview of linear regression methods. The methods are discussed in detail in (Project 1, FYS-STK4155).
 
+$R^2$ score and MSE as measures of performance
 
+Bias-variance analysis using bootstrap
 %----------------------------------------------------------------
 \subsection{Logistic Regression}\label{sec:logreg theory}
 %----------------------------------------------------------------
@@ -84,7 +86,7 @@ To show that this cost function makes sense, we plot a simplified version with $
 \label{fig:logistic_cost}
 \end{figure}
 
-The objective of the cost function is to heavily penalize the model if it predicts a negative class ($y=0$) if the acual class is positve ($y=1$) and vice-versa. 
+The objective of the cost function is to heavily penalize the model if it predicts a negative class ($y=0$) if the actual class is positive ($y=1$) and vice-versa. 
 
 As seen in the above figure, for $C(\beta) = - \log(\hat{p})$ the cost nears 0 as $\hat{p}$ approaches 1 and as $\hat{p}$ nears 0 the cost goes toward infinity (that is, we penalize the model heavily). Similarly, for $C(\beta) = - \log(1 - \hat{p})$, when the actual value is 0 and the model predicts 0, the cost is 0, and the cost goes toward infinity as $\hat{p}$ approaches 1.
 
@@ -92,9 +94,15 @@ As seen in the above figure, for $C(\beta) = - \log(\hat{p})$ the cost nears 0 a
 %----------------------------------------------------------------
 \subsection{Optimization and Gradient Methods}\label{sec:optim theory}
 %----------------------------------------------------------------
-SGD
 
-Newton-Raphson's method
+\subsubsection{Gradient Descent}\label{sec:gradient descent}
+Let $f\colon U\to\mathbb{R}$ be a function defined on a subset of $\mathbb{R}^n$. Suppose that $x\in U$ and that $f$ is differentiable in $x_0$. Then from the point $x_0$, the function $f$ has the steepest decrease in the direction along $-\nabla f(x_0)$. Hence, unless $x_0$ gives a minimum for $f$, given $\gamma_0 > 0$ small enough, we have that for $x_1 = x_0 - \gamma_0\nabla f(x_0)$, the inequality $f(x_1)\le f(x_0)$ holds. For all $n\in\mathbb{N}$, define
+\begin{equation*}
+    x_n = x_{n-1} - \gamma_{n-1}\nabla f(x_{n-1}),
+\end{equation*}
+where $\gamma_{n-1}>0$ is some number. If the $\gamma_{n}$ are chosen sufficiently small, the sequence $\{x_n\}_{n\in\mathbb{N}}$ converges to a local minimum. Larger $\gamma_{n}$ make the convergence faster.
+
+\subsubsection{Newton-Raphson method}\label{sec:newton-raphson method}
 
 Let $A\subseteq\mathbb{R}^n$ and suppose that $f\colon A \to\mathbb{R}^n$ is a differentiable function. If $x_0\in A$, then for $x\in A$ “close” to $x_0$, the function $x\mapsto f(x_0)+Df(x_0)(x-x_0)$ is a good approximation of $f$. Assume that $f$ has a zero close to $x_0$. To try and find this zero, instead of solving $f(x)=0$, we solve the system of linear equations given by
 \begin{equation*}
@@ -132,6 +140,52 @@ then $Df(x)$ is invertible for all $x$ in the open ball $B\left(x,\frac{1}{KM}\r
 %----------------------------------------------------------------
 \subsection{Neural Network}\label{sec:dnn theory}
 %----------------------------------------------------------------
+Neural networks comprise a huge family of flexible function suitable of approximating nearly any function. Originally used as a simple model of the brain 
+by McCulloch and Pitts in 1943(Siter), the field of neural networks has proved to be extremely useful in the world of modelling and machine learning. Today, the progress is still going strong, with application in a vast number of fields and many different flavors of neural networks
+
+\subsubsection{Architechture of the Feed-Forward Neural Network}
+In this project, we focus on the feed-forward neural network, hereafter referred
+to simply as neural network. A neural network is in essence a real-valued function that may take number of inputs and outputs. It's behaviour is completely determined by its architecture, which is comprised of hidden layers.
+
+A hidden layers is a set of nodes that relates to the emitted values of the 
+previous hidden layer, or the inputs, it case it is the first hidden layer in the 
+network. For the i'th node in the first hidden layer, its activation is 
+calculated as
+\begin{equation}\label{eq:activation}
+    z^1_i = \sum_{j=1}^N W^1_{ij}x_j + b^1_j,
+\end{equation}
+where $N$ is the number of inputs $x$, $W^1$ is a matrix of the weights connecting the inputs to the first hidden layer, and $b^1$ is a constant bias term added to the activation. Taking the activation as the output of the first hidden layer, \autoref{eq:activation} defines a method of feeding information to the next hidden layer as well, and ultimately through the entire network. However, it can easily be seen from the equation that the feeding of information from one layer to another is a affine transformation. Since a affine transformation of a affine transformation is a affine transformation in itself, adding more layers to a network fails in making a more complex model. To avoid this collapse of 
+layers, we need to introduce a non-linear function $f^1$ to the activation before 
+passing it to the next layer
+\begin{equation}\label{eq:non_linear}
+    a^1_i = f^1(z^1_i)
+\end{equation}
+
+Non-linear functions used are typically sigmoid, $\tanh$ or the Relu, and enables neural network of becoming powerful and flexible models.
+
+\subsubsection{Backward Propagation}
+To evaluate how good a neural network performs on data, some kind of 
+cost function is consulted
+
+\begin{equation}\label{eq:cost}
+    C(y, \tilde{y}) = \sum_{i=1}^N c(y_i, \tilde{y_i}) 
+\end{equation}
+Where the sum is over $N$ data-points, $y_i$ is the target of the i'th data point,
+and $\tilde{y_i}$ is the accompanying prediction of the network given by $\tilde{y_i} = NN(X_i)$. $c$ is typically he square loss for regression
+
+\begin{equation}\label{eq:square_loss}
+    c(y_i, \tilde{y_i}) = (y_i - \tilde{y_i})^2,
+\end{equation}
+
+and cross entropy for binary classification
+\begin{equation}\label{eq:square_loss}
+    c(y_i, \tilde{y_i}) = y_i\log(\tilde{y_i}) + (1 - y_i)\log(1 - \tilde{y_i}),
+\end{equation}
+
+For a untrained neural network, the weights $W$ connecting all the layers are typically initialized in random fashion, popularly as $W \sim N(0,1)$, and the biases $b$ set to a small number such as $0.01$. 
+
+To improve the model from the initial random state, we would like to minimize the cost function with respect to the weights. As the neural network is a very complex function, and not even a convex problem where are minima are global minema, the optimal weights can not be found by $\frac{dC}{dW^l_{ij}} = 0$. Instead, we resort to using gradient decent methods.
+
 
 
 
