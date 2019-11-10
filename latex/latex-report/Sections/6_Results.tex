@@ -22,20 +22,52 @@ Discuss counting in the all-to-all Ising model
 \subsection{Learning the Ising Hamiltonian with Linear Regression}\label{sec:results linreg}
 %----------------------------------------------------------------
 
+\autoref{fig:j_ols} shows the coupling matrix obtained by performing OLS regression.
+
+\begin{figure}[H]
+\begin{center}\includegraphics[scale=0.6]{latex/figures/ising_J_ols.pdf}
+\end{center}
+\caption{figure text}
+\label{fig:j_ols}
+\end{figure}
+
+\autoref{fig:j_lmbda} shows the coupling matrices obtained by performing Ridge and Lasso regression with different regularization parameter, $\lambda$, values.
+
 \begin{figure}[H]
 \captionsetup[subfigure]{labelformat=empty}
 \centering
-\subfloat[]{{\includegraphics[scale=0.4]{latex/figures/ising_J_lmbda_0_0001.pdf}}}
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_0_0001.pdf}}}
 \qquad
-\subfloat[]{{\includegraphics[scale=0.4]{latex/figures/ising_J_lmbda_0_001.pdf}}}
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_0_001.pdf}}}
 \qquad
-\subfloat[]{{\includegraphics[scale=0.4]{latex/figures/ising_J_lmbda_0_01.pdf}}}
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_0_01.pdf}}}
 \qquad
-\subfloat[]{{\includegraphics[scale=0.4]{latex/figures/ising_J_lmbda_0_1.pdf}}}
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_0_1.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_1_0.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_10_0.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_100_0.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_1000_0.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_10000_0.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_100000_0.pdf}}}
 \caption{figure text}
-\label{fig:fig1}
+\label{fig:j_lmbda}
 \end{figure}
 
+
+\autoref{fig:r2_lmbda_1d} shows the $R^2$ score and MSE as a function of the regularization parameter $\lambda$.
+
+\begin{figure}[H]
+\begin{center}\includegraphics[scale=0.5]{latex/figures/ising1D_r2_vs_lmbda.pdf}
+\end{center}
+\caption{figure text}
+\label{fig:r2_lmbda_1d}
+\end{figure}
 
 %----------------------------------------------------------------
 \subsection{Identifying 2D Ising Model Phases with Logistic Regression}\label{sec:results logreg}
