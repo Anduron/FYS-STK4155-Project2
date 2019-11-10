@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
-import scipy.sparse as sp
 from sklearn.utils import resample
 
 
@@ -13,6 +10,7 @@ def ising_energies(states):
     This function calculates the energies of the states in the nn Ising
     Hamiltonian
     """
+
     L = states.shape[1]
     J = np.zeros((L, L),)
     for i in range(L):
@@ -26,19 +24,20 @@ def generate_1Ddata(L=40, N=10000):
     """
     Generate data for 1D Ising model that is optimized for linear regression
     """
+
     states = np.random.choice([-1, 1], size=(N, L))  # random Ising states
     energies = ising_energies(states)  # calculate Ising energies
     # reshape Ising states into RL samples: S_iS_j --> X_p
     states = np.einsum('...i,...j->...ij', states, states)
     shape = states.shape
     states = states.reshape((shape[0], shape[1] * shape[2]))
-    print(states.shape)
     return states, energies
 
 
-def bias_variance(model, data, target, n_bootstraps, ratio):
+def bias_variance(model, data, target, n_bootstraps, test_ratio, lmbda=None, verbose=False):
     # Hold out some test data that is never used in training.
-    X_train, X_test, y_train, y_test = model.split_data(data, target, ratio)
+    X_train, X_test, y_train, y_test = model.split_data(
+        data, target, test_ratio)
     y_test = y_test.reshape(-1, 1)
 
     # The following (m x n_bootstraps) matrix holds the column vectors y_pred
@@ -47,30 +46,38 @@ def bias_variance(model, data, target, n_bootstraps, ratio):
     for i in range(n_bootstraps):
         X_, y_ = resample(X_train, y_train)
 
+        if lmbda is not None:
+            model.set_penalty(lmbda)
+
         # Evaluate the new model on the same test data each time.
         model.fit(X_, y_)
         y_pred[:, i] = model.predict(X_test).ravel()
 
     # Note: Expectations and variances taken w.r.t. different training
-    # data sets, hence the axis=1. Subsequent means are taken across the test data
-    # set in order to obtain a total value, but before this we have error/bias/variance
-    # calculated per data point in the test set.
-    # Note 2: The use of keepdims=True is important in the calculation of bias as this
-    # maintains the column vector form. Dropping this yields very unexpected results.
-    print(f'y_test: {y_test.shape}, y_pred: {y_pred.shape}')
-    print(np.mean(y_pred, axis=1, keepdims=True))
+    # data sets, hence the axis=1. Subsequent means are taken across the test
+    # data set in order to obtain a total value, but before this we have
+    # error/bias/variance calculated per data point in the test set.
+    # Note 2: The use of keepdims=True is important in the calculation of bias
+    # as this maintains the column vector form. Dropping this yields very
+    # unexpected results.
+
     error = np.mean(np.mean((y_test - y_pred)**2, axis=1, keepdims=True))
-    bias = np.mean(target - np.mean(y_pred, axis=1, keepdims=True))**2
+    bias = np.mean((y_test - np.mean(y_pred, axis=1, keepdims=True))**2)
     variance = np.mean(np.var(y_pred, axis=1, keepdims=True))
-    print('Error:', error)
-    print('Bias^2:', bias)
-    print('Var:', variance)
-    print(f'{error} >= {bias} + {variance} = {bias + variance}')
+
+    if verbose:
+        print(f'y_test: {y_test.shape}, y_pred: {y_pred.shape}')
+        print('Error:', error)
+        print('Bias^2:', bias)
+        print('Var:', variance)
+        print(f'{error} >= {bias} + {variance} = {bias + variance}')
+
+    return error, bias, variance
 
 
 if __name__ == "__main__":
 
-    from linearmodel import OLS, RidgeReg, LassoReg
+    from linearmodel import OLS, Ridge, Lasso
     from sklearn.model_selection import train_test_split
     # np.random.seed(42)
 

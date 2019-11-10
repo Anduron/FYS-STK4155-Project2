@@ -3,14 +3,43 @@
 %================================================================
 
 %----------------------------------------------------------------
+\subsection{The Ising Model}\label{sec:ising theory}
+%----------------------------------------------------------------
+The Ising model is a binary value system where the variables of the model can take two values only, e.g. $\pm 1$ or 0 and 1. In statistical mechanics, the Ising model is used to model interacting magnetic dipole moments of atomic spins. The spins, denoted by $s$, are are arranged in a lattice with $L$ spin sites, allowing each spin to interact with its neighbors. The two dimensional square lattice Ising model exhibits a phase transition from a magnetic phase(a system with finite magnetic moment) to a phase with zero magnetization at a given critical temperature, called the Curie temperature, $T_C$. \cite{PROJising}
+
+By simplifying the interaction between the spins to nearest neighbors only and assuming that the nearest neighbors have the same interaction strength, the Hamiltonian of the system can be defined as
+\begin{equation}\label{eq:ising energy}
+    H = - J \sum_{\ev{kl}} s_k s_l,
+\end{equation}
+where the spins $s=\pm 1$, $\ev{kl}$ indicates that the sum is over the nearest neighbors only, $J$ is a coupling constant expressing the strength of the interaction between neighboring spins. 
+
+For $J>0$ it is energetically favorable for neighboring spins to be aligned, and the magnetic system will have a ferromagnetic ordering. Ferromagnetic materials exhibit a long-range ordering phenomenon where a given magnetic moment, through interactions between nearest neighbors, can influence the alignment of spins that are separated from the given spin by a macroscopic distance.
+At temperatures below the Curie temperature, $T_C$, the ordering of spin states lead to a phenomenon called spontaneous magnetization. That is, the lattice has a net magnetization even in the absence of an external magnetic field. For temperatures $T\geq T_C$, however, the ferromagnetic property disappears as a result of thermal agitation. \cite{PROJising}
+
+In the regression part of this study, we will consider the one-dimensional Ising model with nearest neighbor interactions on a chain of length $N$ with periodic boundary conditions, that is, spins at the boundary will have its nearest neighbors at the opposite boundary. In one-dimension \autoref{eq:ising energy} reduces to 
+
+\begin{equation}\label{eq:ising 1D energy}
+    H  = - J \sum_{j=1}^N s_j s_{j+1},
+\end{equation}
+
+This model does not exhibit any phase transition at finite temperature.
+
+
+
+%----------------------------------------------------------------
 \subsection{Linear Regression (revisited)}\label{sec:linreg theory}
 %----------------------------------------------------------------
-Brief overview of linear regression methods. The methods are discussed in detail in (Project 1, FYS-STK4155).
+Linear regression is used to predict the value of a continuous dependent variable by simply computing a weighted sum of the input features. A study of three regression methods, namely, Ordinary Least Squares (OLS), Ridge, and Least Absolute Shrinkage and Selection Operator (Lasso), were carried out by the authors in \cite{PROJone}. For a detailed discussion of the aforementioned regression methods, as well as the mean squared error (MSE), coefficient of determination ($R^2$ score), bias and variance, please consult \autoref{sec:Appendix A} or \cite{PROJone}.
 
-
-%----------------------------------------------------------------
+%--------------------------------------------------------------
 \subsection{Logistic Regression}\label{sec:logreg theory}
-%----------------------------------------------------------------
+%--------------------------------------------------------------
+Some regression algorithms can be used for classification
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Motivate
 
 logistic function
@@ -84,17 +113,25 @@ To show that this cost function makes sense, we plot a simplified version with $
 \label{fig:logistic_cost}
 \end{figure}
 
-The objective of the cost function is to heavily penalize the model if it predicts a negative class ($y=0$) if the acual class is positve ($y=1$) and vice-versa. 
+The objective of the cost function is to heavily penalize the model if it predicts a negative class ($y=0$) if the actual class is positive ($y=1$) and vice-versa. 
 
 As seen in the above figure, for $C(\beta) = - \log(\hat{p})$ the cost nears 0 as $\hat{p}$ approaches 1 and as $\hat{p}$ nears 0 the cost goes toward infinity (that is, we penalize the model heavily). Similarly, for $C(\beta) = - \log(1 - \hat{p})$, when the actual value is 0 and the model predicts 0, the cost is 0, and the cost goes toward infinity as $\hat{p}$ approaches 1.
 
 
-%----------------------------------------------------------------
+%--------------------------------------------------------------
 \subsection{Optimization and Gradient Methods}\label{sec:optim theory}
-%----------------------------------------------------------------
-SGD
+%--------------------------------------------------------------
 
-Newton-Raphson's method
+\subsubsection{Gradient Descent}\label{sec:gradient descent}
+Let $f\colon U\to\mathbb{R}$ be a function defined on a subset of $\mathbb{R}^n$. Suppose that $x\in U$ and that $f$ is differentiable in $x_0$. Then from the point $x_0$, the function $f$ has the steepest decrease in the direction along $-\nabla f(x_0)$. Hence, unless $x_0$ gives a minimum for $f$, given $\gamma_0 > 0$ small enough, we have that for $x_1 = x_0 - \gamma_0\nabla f(x_0)$, the inequality $f(x_1)\le f(x_0)$ holds. For all $n\in\mathbb{N}$, define
+\begin{equation*}
+    x_n = x_{n-1} - \gamma_{n-1}\nabla f(x_{n-1}),
+\end{equation*}
+where $\gamma_{n-1}>0$ is some number. If the $\gamma_{n}$ are chosen sufficiently small, the sequence $\{x_n\}_{n\in\mathbb{N}}$ converges to a local minimum. Larger $\gamma_{n}$ make the convergence faster.
+
+\subsubsection{Newton-Raphson method}\label{sec:newton-raphson method}
+
+This section is based on \cite[Section 5.6]{FVA}.
 
 Let $A\subseteq\mathbb{R}^n$ and suppose that $f\colon A \to\mathbb{R}^n$ is a differentiable function. If $x_0\in A$, then for $x\in A$ “close” to $x_0$, the function $x\mapsto f(x_0)+Df(x_0)(x-x_0)$ is a good approximation of $f$. Assume that $f$ has a zero close to $x_0$. To try and find this zero, instead of solving $f(x)=0$, we solve the system of linear equations given by
 \begin{equation*}
@@ -132,48 +169,48 @@ then $Df(x)$ is invertible for all $x$ in the open ball $B\left(x,\frac{1}{KM}\r
 %----------------------------------------------------------------
 \subsection{Neural Network}\label{sec:dnn theory}
 %----------------------------------------------------------------
+Neural networks comprise a huge family of flexible function suitable of approximating nearly any function. Originally used as a simple model of the brain 
+by McCulloch and Pitts in 1943(Siter), the field of neural networks has proved to be extremely useful in the world of modelling and machine learning. Today, the progress is still going strong, with application in a vast number of fields and many different flavors of neural networks
 
+\subsubsection{Architechture of the Feed-Forward Neural Network}
+In this project, we focus on the feed-forward neural network, hereafter referred
+to simply as neural network. A neural network is in essence a real-valued function that may take number of inputs and outputs. It's behaviour is completely determined by its architecture, which is comprised of hidden layers.
 
-
-%----------------------------------------------------------------
-\subsection{The Ising Model}\label{sec:ising theory}
-%----------------------------------------------------------------
-
-
-\textbf{Excerpt from FYS3150 Project 4}
-
-In statistical mechanics, the Ising model is a model of interacting magnetic dipole moments of atomic spins. The spins, denoted by $S$, are in either a spin up state, with numerical value $+1$ and depicted by $\uparrow$, or a spin down state, with numerical value $- 1$ and depicted by $\downarrow$. The spins are usually arranged in a lattice, where each spin sets up a magnetic field related to the spin direction. This field will decay with the distance from spin $S_i$, so the interaction between spin $S_i$ and $S_j$ will therefore depend on the distance between the spins. As an approximation, the decay of the magnetic field will be assumed to happen rapidly in space, so that the interaction only is between the nearest neighbors \cite[p. 211-212]{Malthe}. A lattice with a specific spin configuration corresponds to a microstate of the system. For $N$ spin particles there are $M=2^N$ possible microstates (or configurations). The energy of a specific configuration $i$ for a system with $N$ spin particles is then given by the Hamiltonian \cite[p. 421]{MHJ}
-\begin{equation*}
-    H_i = - \sum_{\ev{i,j}}^N J_{ij} S_i S_j - \mathcal{B}_\mathrm{ext} \sum_{j}^N S_j ,
-\end{equation*}
-where $\ev{i,j}$ indicates that the sum is over the nearest neighbors only, $\mathcal{B}_\mathrm{ext}$ is an external magnetic field interacting with the magnetic moment set up by the spins, and $J_{ij}$ is a coupling constant that includes the effect of the magnetic field set up by spin $i$, the decay of the field with distance, and the coupling between the field and spin $S_j$. In this project, the Ising model is examined without an external field interacting with the lattice, that is, $\mathcal{B}_\mathrm{ext}=0$. Furthermore, all of the nearest neighbors $\ev{i,j}$ is assumed to have the same interaction strength. Thus, the above equation simplifies to
-\begin{equation}\label{eq:ising energy}
-    E_i = - J \sum_{\ev{i,j}}^N S_i S_j
+A hidden layers is a set of nodes that relates to the emitted values of the 
+previous hidden layer, or the inputs, it case it is the first hidden layer in the 
+network. For the i'th node in the first hidden layer, its activation is 
+calculated as
+\begin{equation}\label{eq:activation}
+    z^1_i = \sum_{j=1}^N W^1_{ij}x_j + b^1_j,
 \end{equation}
-For $J>0$ it is energetically favorable for neighboring spins to be aligned. Materials with $J>0$ are ferromagnetic, and exhibit a long-range ordering phenomenon where a given magnetic moment, through interactions between nearest neighbors, can influence the alignment of spins that are separated from the given spin by a macroscopic distance. The appearance of an ordered spin state leads to a phenomenon called spontaneous magnetization, meaning that the lattice has a net magnetization even in the absence of an external magnetic field. However, this property manifest itself only below a critical temperature, called the Curie temperature, $T_C$. For temperatures $T\geq T_C$ the ferromagnetic property disappears as a result of thermal agitation. It is also worth mentioning that the alignment of spins occur within a domain in the material, where different domains will themselves be randomly oriented so that a bulk sample of the material usually is not magnetized \cite[p. 421-422]{MHJ}\cite{HyperPhys}.
-
-In the Ising model, the magnetization is given by \cite[p. 423]{MHJ}
-\begin{equation}\label{eq:ising mag}
-    \mathcal{M}_i = \sum_{j=1}^N S_j,
+where $N$ is the number of inputs $x$, $W^1$ is a matrix of the weights connecting the inputs to the first hidden layer, and $b^1$ is a constant bias term added to the activation. Taking the activation as the output of the first hidden layer, \autoref{eq:activation} defines a method of feeding information to the next hidden layer as well, and ultimately through the entire network. However, it can easily be seen from the equation that the feeding of information from one layer to another is a affine transformation. Since a affine transformation of a affine transformation is a affine transformation in itself, adding more layers to a network fails in making a more complex model. To avoid this collapse of 
+layers, we need to introduce a non-linear function $f^1$ to the activation before 
+passing it to the next layer
+\begin{equation}\label{eq:non_linear}
+    a^1_i = f^1(z^1_i)
 \end{equation}
-where the sum is over all spins for a given configuration $i$.
 
-\autoref{fig:neighbors} illustrates the concept of “nearest neighbors” in a square lattice in two dimensions, where the spin $S_{i,j}$ sets up a magnetic field which interacts with the neighboring spins $S_{i-1,j}$, $S_{i+1,j}$, $S_{i,j-1}$, and $S_{i,j+1}$.
-\begin{figure}[H]
-    \begin{minipage}[c]{0.4\textwidth}
-    \caption{Neighbors in the the two dimensional Ising model. The neighbors for a spin $S_{i,j}$ are $S_{i-1,j}$, $S_{i+1,j}$, $S_{i,j-1}$, and $S_{i,j+1}$. Figure retrieved from Fig. 7.8 in \cite{Malthe}.} 
-    \label{fig:neighbors}
-    \end{minipage}\hfill
-  \begin{minipage}[c]{0.4\textwidth}
-    \includegraphics[scale=0.35]{./Images/lattice}
-  \end{minipage}
-\end{figure}
+Non-linear functions used are typically sigmoid, $\tanh$ or the Relu, and enables neural network of becoming powerful and flexible models.
 
-For the remainder of this project, the magnetic system under consideration will have a ferromagnetic ordering, viz $J>0$. Furthermore, the lattice under consideration will be two dimensional, that is, a square lattice with $L \times L$ spin sites, with $L$ being the number of spins in one dimension.
+\subsubsection{Backward Propagation}
+To evaluate how good a neural network performs on data, some kind of 
+cost function is consulted
 
-%----------------------------------------------------------------
-\subsection{Periodic Boundary Conditions}\label{sec:pbc theory}
-%----------------------------------------------------------------
-\textbf{Excerpt from FYS3150 Project 4}
+\begin{equation}\label{eq:cost}
+    C(y, \tilde{y}) = \sum_{i=1}^N c(y_i, \tilde{y_i}) 
+\end{equation}
+Where the sum is over $N$ data-points, $y_i$ is the target of the i'th data point,
+and $\tilde{y_i}$ is the accompanying prediction of the network given by $\tilde{y_i} = NN(X_i)$. $c$ is typically he square loss for regression
 
-A physical crystal structure consists of a very large number of atoms. In order to model a crystal structure realistically, it usually requires a lattice essentially infinite in all directions. This implies that the behavior of the crystal near the boundaries of the lattice is effectively negligible for the crystal as a whole. It is infeasible to simulate a lattice even remotely approaching a very large number, due to limits of computation. Instead, the boundaries of a relatively small finite lattice must be handled in a manner that ensures a good correspondence with reality. With periodic boundary conditions, spins at the boundary will have its nearest neighbors at the opposite boundary. This ensures that the boundary of a finite lattice has no effect on the behavior of the crystal.
+\begin{equation}\label{eq:square_loss}
+    c(y_i, \tilde{y_i}) = (y_i - \tilde{y_i})^2,
+\end{equation}
+
+and cross entropy for binary classification
+\begin{equation}\label{eq:square_loss}
+    c(y_i, \tilde{y_i}) = y_i\log(\tilde{y_i}) + (1 - y_i)\log(1 - \tilde{y_i}),
+\end{equation}
+
+For a untrained neural network, the weights $W$ connecting all the layers are typically initialized in random fashion, popularly as $W \sim N(0,1)$, and the biases $b$ set to a small number such as $0.01$. 
+
+To improve the model from the initial random state, we would like to minimize the cost function with respect to the weights. As the neural network is a very complex function, and not even a convex problem where are minima are global minema, the optimal weights can not be found by $\frac{dC}{dW^l_{ij}} = 0$. Instead, we resort to using gradient decent methods.

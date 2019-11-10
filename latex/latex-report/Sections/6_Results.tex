@@ -1,9 +1,88 @@
 %================================================================
-\section{Results}\label{sec:Results}
+\section{Results and Discussion}\label{sec:Results}
 %================================================================
 
-%----------------------------------------------------------------
-\subsection{Project Results 1}\label{sec:project results}
-%----------------------------------------------------------------
+The programs containing the implementation of the methods discussed in the previous section, as well as the results presented in this section, can be found at the GitHub repository
+\begin{center}
+    \url{https://github.com/nicolossus/FYS-STK4155-Project2}
+\end{center}
+
+The procedures for producing the following results are contained in Jupyter Notebooks found \href{https://github.com/nicolossus/FYS-STK4155-Project2/tree/master/notebooks}{here}.
 
 
+%----------------------------------------------------------------
+\subsection{Producing Data for 1D Ising Model}\label{sec:results datagen}
+%----------------------------------------------------------------
+
+Discuss counting in the all-to-all Ising model
+
+%----------------------------------------------------------------
+\subsection{Learning the Ising Hamiltonian with Linear Regression}\label{sec:results linreg}
+%----------------------------------------------------------------
+
+\autoref{fig:j_ols} shows the coupling matrix obtained by performing OLS regression.
+
+\begin{figure}[H]
+\begin{center}\includegraphics[scale=0.6]{latex/figures/ising_J_ols.pdf}
+\end{center}
+\caption{figure text}
+\label{fig:j_ols}
+\end{figure}
+
+\autoref{fig:j_lmbda} shows the coupling matrices obtained by performing Ridge and Lasso regression with different regularization parameter, $\lambda$, values.
+
+\begin{figure}[H]
+\captionsetup[subfigure]{labelformat=empty}
+\centering
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_0_0001.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_0_001.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_0_01.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_0_1.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_1_0.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_10_0.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_100_0.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_1000_0.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_10000_0.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_100000_0.pdf}}}
+\caption{figure text}
+\label{fig:j_lmbda}
+\end{figure}
+
+
+\autoref{fig:performance_lmbda_1d} shows the $R^2$ score and MSE as a function of the regularization parameter $\lambda$.
+
+\begin{figure}[H]
+\centering
+\subfloat[]{{\includegraphics[scale=0.5]{latex/figures/ising1D_r2_vs_lmbda.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.5]{latex/figures/ising1D_mse_vs_lmbda.pdf}}}
+\caption{figure text}
+\label{fig:performance_lmbda_1d}
+\end{figure}
+
+
+%----------------------------------------------------------------
+\subsection{Identifying 2D Ising Model Phases with Logistic Regression}\label{sec:results logreg}
+%----------------------------------------------------------------
+
+\autoref{fig:2d_ising_states} shows some states from the data set for both the ordered and disordered phase, and the critical region as well. 
+
+\begin{figure}[H]
+\begin{center}\includegraphics[scale=0.5]{latex/figures/ising_2d_states.pdf}
+\end{center}
+\caption{figure text}
+\label{fig:2d_ising_states}
+\end{figure}
+
+%----------------------------------------------------------------
+\subsection{Identifying 2D Ising Model Phases with Neural Networks}\label{sec:results NN}
+%----------------------------------------------------------------

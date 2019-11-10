@@ -1,4 +1,200 @@
 %================================================================
-\section{Appendix}\label{sec:Appendix A}
+\section{Review of Linear Regression}\label{sec:Appendix A}
 %================================================================
+The following material is an excerpt from the theory section in \cite{PROJone}.
 
+%----------------------------------------------------------------
+\subsection{Regression Analysis}\label{sec:RegressAnal theory}
+%----------------------------------------------------------------
+Let $X=(X_1,\ldots,X_p)\in\R^p$ and $Y\in\R$ be random variables. A regression model assumes that there is a function $f\colon \R^p\to \R$ such that
+\[
+\E(Y|X) = f(X).
+\]
+The components of $X$ are referred to as the \emph{inputs}, \emph{predictors} or \emph{independent variables}, while $Y$ is referred to as the \emph{output}, \emph{response} or \emph{dependent variable} \cite[9]{ESL}.
+
+We will use the notation $\hat{f}$ for a function that is an estimator of $f$. A value $\hat{Y} = \hat{f}(X)$ is then referred to as the \emph{fitted} or \emph{predicted value} at input $X$. The estimator $\hat{f}$ is usually calculated from a collection $\{(X_i,Y_i)\:i=1,\ldots,N\}$ of observations. For this reason this collection is often called a training set.
+
+The \emph{bias} of an estimator $\hat{f}$ in an input point $X$ is the difference
+\begin{equation*}
+    \bias(\hat{f}(X)) = \E(\hat{f}(X)|X)-f(X)
+\end{equation*}
+between the expected estimate and the true value in $X$. If the bias is $0$, we say that the estimator is \emph{unbiased}. Otherwise the estimator is \emph{biased}.
+
+A linear regression model assumes that $f$ is such that
+\[
+f(X) = \beta_0 +\sum_{i=1}^pX_i\beta_i
+\]
+for some $\beta=(\beta_0,\ldots,\beta_p)^T\in\R^{p+1}$. It is customary to include $1$ as the first component in $X$, so that $X=(1,X_1,\ldots,X_p)^T\in\R^{p+1}$ and one can write
+\[
+\E(Y|X) = X^T\beta.
+\]
+%----------------------------------------------------------------
+\subsection{Ordinary Least Squares (OLS)}\label{sec:OLS theory}
+%----------------------------------------------------------------
+Assume a linear regression model $\E(Y|X)=X^T\beta$, $\beta\in\R^{p+1}$, for the random variables $X=(1,X_1,\ldots,X_p)^T\in\R^{p+1}$ and $Y\in\R$. The ordinary least squares is a method for estimating $\beta$. Namely, given a training set $\{(x_i,y_i)\in\R^{p+1}\times\R:i=1,\ldots, N\}$, we choose the coefficients $\beta$ that minimize the residual sum of squares
+\[
+\rss(\beta) = \sum_{i=1}^N \qty(y_i-x_i^T\beta)^2.
+\]
+Since this is a quadratic function in the parameters $\beta$, it always has a minimum, but it need not be unique. By writing $\X$ for the $N\times p$-matrix with $x_1,\ldots,x_n$ as rows and $\y$ for the column vector with components $y_1,\ldots,y_n$, we get the residual sum of squares in matrix form as
+\[
+\rss(\beta) = (\y-\X\beta)^T(\y-\X\beta).
+\]
+By the chain rule and the fact that the Jacobian matrix of $a\mapsto a^Ta$ is $2a^T$, we get that the gradient of $\rss$ is
+\[
+\nabla\rss(\beta)=-2\X^T(\y-\X\beta).
+\]
+The Hesse matrix $H\rss(\beta)$ is equal to the Jacobian matrix of $\beta\mapsto\nabla\rss(\beta)$, thus
+\[
+H\rss(\beta)=\X^T\X.
+\]
+Assume now that $\X$ has full column rank. Then $\X^T\X$ is positive definite and in particular invertible. It follows that the equation
+\begin{align*}
+    \nabla\rss(\beta)=0\;\;\Leftrightarrow\;\;\X^T(\y-\X\beta)&=0
+\end{align*}
+has the unique solution
+\begin{equation}\label{eq:ols_fit}
+    \hat{\beta} = (\X^T\X)^{-1}\X^T\y,   
+\end{equation}
+which gives the unique minimum of $\rss$. The predicted value at an input vector $x_0$ (with $1$ as the first component) is $\hat{f}(x_0)=x_0^T\hat{\beta}$. The fitted values at the training inputs are
+\[
+\hat{\y}=\X\hat{\beta}=\X(\X^T\X)^{-1}\X^T\y
+\]
+Note that
+\[
+\rss(\beta) = (\y-\X\beta)^T(\y-\X\beta) = \norm{\y-\X\beta}^2,
+\]
+so a vector $\hat{\beta}$ minimizing $\rss$ is such that $\X\hat{\beta}$ is the point in the column space of $\X$ that is closest to $\y$. This is valid also in the case when $\rss$ does not have a unique minimum. In other words, $\X\hat{\beta}$ is the orthogonal projection of $\y$ onto the column space of $\X$. The matrix
+\[
+\mathbf{H} = \X(\X^T\X)^{-1}\X^T
+\]
+is the projection matrix onto the column space of $\X$ (with the property $\mathbf{H}^T=\mathbf{H}=\mathbf{H}^2$). It is often called the “hat” matrix, since it puts a hat on $\y$.
+
+Using linearity of the expected value we find that
+\begin{align*}
+    \E(\hat{\beta}|\X)=\E((\X^T\X)^{-1}\X^T\y|\X)=(\X^T\X)^{-1}\X^T\E(\y|\X) = (\X^T\X)^{-1}\X^T\X\beta = \beta.
+\end{align*}
+Moreover, since in general $\Var(\mathbf{A}Z)=\mathbf{A}\Var(Z)\mathbf{A}^T$ for constant matrices $\mathbf{A}$ and random vectors $Z$ (by the linearity of the expectation), it follows that
+\begin{align}\label{eq:ols_var}
+    \Var(\hat{\beta}|\X) = (\X^T\X)^{-1}\X^T\Var(\y)\X(\X^T\X)^{-1} = (\X^T\X)^{-1}\X^T\sigma^2I\X(\X^T\X)^{-1} = \sigma^2(\X^T\X)^{-1}.
+\end{align}
+
+A linear transformation of a multivariate normal random vector is again multivariate normal. Thus $\hat{\beta}\sim N(\beta,\sigma^2(\X^T\X)^{-1})$.
+
+We usually estimate the variance $\sigma^2$ by
+\begin{equation*}
+    \hat{\sigma}^2=\frac{1}{N-p-1}\sum_{i=1}^N(y_i-\hat{y}_i)^2.
+\end{equation*}
+Plugging this into \cref{eq:ols_var}, we get an estimate of $\Var(\hat{\beta})$ by
+\begin{equation}\label{eq:ols_var_est}
+    \hat{\sigma}^2(\X^T\X)^{-1}=\frac{1}{N-p-1}\sum_{i=1}^N(y_i-\hat{y}_i)^2(\X^T\X)^{-1}.
+\end{equation}
+It can be shown that $\hat{\sigma}$ has a distribution such that
+\begin{equation*}
+    (N-p-1)\hat{\sigma}^2\sim\sigma^2\chi^2_{N-p-1},
+\end{equation*}
+the chi-squared distribution with $N-p-1$ degrees of freedom.\cite[47]{ESL} Moreover, the random variables $\hat{\beta}$ and $\hat{\sigma}^2$ are statistically independent.
+
+By writing the parameters $\hat{\beta}_j$ as linear transformations of $\hat{\beta}$, we can show that $\hat{\beta}_j\sim N(\beta_i,\sigma^2 v_j)$, where $v_j$ is the $j$-th diagonal element of $(\X^T\X)^{-1}$, or, in other words $\sigma^2 v_j$ is the $j$-th diagonal element of $\Var(\hat{\beta})$.
+
+Under the null hypothesis that $\beta_j = 0$, the random variable
+\begin{equation*}
+    z_j=\frac{\hat{\beta}_j}{\hat{\sigma}\sqrt{v_j}}
+\end{equation*}
+is distributed as $t_{N-p-1}$, a $t$ distribution with $N-p-1$ degrees of freedom.
+
+%----------------------------------------------------------------
+\subsection{Ridge Regression}\label{sec:Ridge theory}
+%----------------------------------------------------------------
+Ridge regression is an example of a method that gives a biased estimator. It is similar to least squares, but instead of minimizing the sum $\sum_{i=1}^N(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j)^2$, we minimize 
+\begin{equation}\label{eq:ridge}
+    \sum_{i=1}^N(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j)^2+\lambda\sum_{i=1}^p\beta_i^2,
+\end{equation}
+where $\lambda$ is some positive real number. The consequence, compared to least squares, is that the coefficients $\beta$ are shrunken. The amount of shrinkage is controlled by the value of $\lambda$. Larger $\lambda$ means more shrinkage. The solution is denoted $\hat{\beta}^{\text{ridge}}$.
+
+It can be shown that an equivalent way of formulating the ridge problem is as
+\[\label{ridge formula}
+\hat{\beta}^{\text{ridge}}=\argmin_{\beta}\sum_{i=1}^N(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j)^2
+\]
+subject to the constraint
+\[
+\sum_{i=1}^p\beta_i^2\le t.
+\]
+ for some $t>0$. There is a one-to-one correspondence between the parameters $\lambda$ and $t$. It can be shown \cite[Exercise 3.5]{ESL} that if we replace each $x_{ij}$ by $x_{ij}-\overline{x}_j=x_{ij}-\frac{1}{N}\sum_{i=1}^Nx_{ij}$, the ridge problem has the following two step solution: First estimate $\beta_0$ by $\overline{y}=\frac{1}{N}\sum_{i=1}^Ny_i$, then estimate the remaining coefficients by a ridge regression without the intercept. If we remove the intercept from $\beta$ and remove the column of ones from the design matrix $\X$, we can write the expression to minimize in the ridge regression step as
+ \[
+ (\y-\X\beta)^T(\y-\X\beta)+\lambda\beta^T\beta = \norm{\y-\X\beta}^2+\lambda\norm{\beta}^2
+ \]
+ The ridge regression solution can then be shown to be
+ \begin{equation}\label{eq:ridge_fit}
+     \hat{\beta}^{\text{ridge}} = (\X^T\X+\lambda I)^{-1}\X^T\y.
+ \end{equation}
+ 
+ 
+ Adding a strictly positive constant $\lambda I$ to $\X^T\X$ makes the problem nonsingular also in the case where $\X^T\X$ is not invertible.
+ 
+ Similarly to for OLS, we can show that
+ \begin{equation*}
+     \E(\hat{\beta}^{\text{ridge}}|\X) = (\X^T\X+\lambda I)^{-1}\X^T\X\beta
+ \end{equation*}
+ and
+ \begin{equation}\label{eq:ridge_var}
+     \Var(\hat{\beta}^{\text{ridge}}|\X) = \sigma^2(\X^T\X+\lambda I)^{-1}\X^T\X(\X^T\X+\lambda I)^{-1}.
+ \end{equation}
+ This shows that the ridge estimator is unbiased if and only if $\lambda=0$.
+ 
+%----------------------------------------------------------------
+\subsection{Lasso Regression}\label{sec:Lasso theory}
+%----------------------------------------------------------------
+Lasso (least absolute shrinkage and selection operator) is a regression method where we choose the coefficients $\beta$ by minimizing the sum
+\begin{equation}\label{eq:lasso}
+    \frac12\sum_{i=1}^N(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j)^2+\lambda\sum_{i=1}^p|\beta_i|,
+\end{equation}
+for some $\lambda > 0$. The solution is denoted $\hat{\beta}^{\text{lasso}}$. Equivalently,
+\begin{equation*}
+    \hat{\beta}^{\text{lasso}} = \argmin_\beta \sum_{i=1}^N(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j)^2
+\end{equation*}
+subject to the constraint
+\begin{equation*}
+    \sum_{j=1}^p|\beta_j|\le t
+\end{equation*}
+for some $t>0$. The parameters $t$ are in a one-to-one correspondence with the parameters $\lambda$.
+
+%----------------------------------------------------------------
+\subsection{Summary Statistics}\label{sec:SummaryStat theory}
+%----------------------------------------------------------------
+Training a model means setting its parameters so that the model best fits the training set. In order to find the best fit, we need to measure how well the model performs on the training data. A common performance measure is the Mean Square Error (MSE)\cite[109]{Hands-onML}: 
+\begin{equation}\label{eq:MSE}
+    \MSE \qty(\hat{y}, \hat{\Tilde{y}})= \frac{1}{n} \sum_{i=0}^{n-1} \qty(y_i - \Tilde{y}_i)^2,
+\end{equation}
+where $\Tilde{y_i}$ is the predicted value of the $i$th sample and $y_i$ is the corresponding true value. In order to train a regression model, we need to find the value of $\beta$ that minimizes the MSE.
+
+The $R^2$ score function is also a useful statistic in the analysis of how well a model performs. It is a measure of how close the data are to the fitted regression line, and is given by
+
+\begin{equation}\label{eq:R2}
+    R^2 \qty(\hat{y}, \Tilde{\hat{y}}) = 1 - \frac{\sum_{i=0}^{n-1} \qty(y_i - \Tilde{y})^2 }{\sum_{i=0}^{n-1} \qty(y_i - \bar{y})^2} = 1 - \frac{\MSE }{\sum_{i=0}^{n-1} \qty(y_i - \bar{y})^2},
+\end{equation}
+where the mean value of $y_i$ is defined as
+\begin{equation*}
+    \bar{y} = \frac{1}{n} \sum_{i=0}^{n-1} y_i
+\end{equation*}
+
+%Yet another useful tool in the statistical toolbox CONFIDENCE INTERVAL
+
+%----------------------------------------------------------------
+\subsection{Bias-variance Tradeoff}\label{sec:Bias-var theory}
+%----------------------------------------------------------------
+Suppose that we have a regression function $f$ such that
+\begin{equation*}
+    Y = f(X) + \varepsilon
+\end{equation*}
+for random variables $X,Y,\varepsilon\in\R$, where $\varepsilon\sim N(0,\sigma^2)$. Let $\hat{f}$ be an estimator for $f$ and let $(X,Y)=(X,f(X)+\varepsilon)$ be an observation independent from $\hat{f}$. For $X=x_0$ we get that the expected prediction error is
+\begin{align*}
+    \E((Y-\hat{f}(x_o))^2) &= \E[((Y-f(x_0)) + (f(x_0) - \E(\hat{f}(x_0))) + (\E(\hat{f}(x_0)) -\hat{f}(x_0)))^2]\\ &= \E[(Y-f(x_0))^2+(f(x_0)-\E(\hat{f}(x_0)))^2 + (\E(\hat{f}(x_0))-\hat{f}(x_0))^2\\& + 2(Y-f(x_0))(f(x_0)-\E(\hat{f}(x_0))) + 2(Y-f(x_0))(\E(\hat{f}(x_0))-\hat{f}(x_0)) \\&+ 2(f(x_0)-\E(\hat{f}(x_0)))(\E(\hat{f}(x_0))-\hat{f}(x_0))].
+\end{align*}
+Since $Y$ is independent from $\hat{f}(x_0)$ and $\E(Y)=f(x_0)$, it follows that
+\begin{align*}
+    \E((Y-\hat{f}(x_o))^2) &= \E((Y-f(x_0))^2) + (f(x_0)-\E(\hat{f}(x_0)))^2 + \E((\E(\hat{f}(x_0))-\hat{f}(x_0))^2) \\&= \sigma^2 + \bias^2(\hat{f}(x_0)) + \Var(\hat{f}(x_0)).
+\end{align*}
+
+This is referred to as the bias-variance decomposition of the expected prediction error. The first term is the variance of $f(x_0)$. The second is the squared bias of $\hat{f}(x_0)$, and measures how far $\hat{f}(x_0)$ is from the true value $f(x_0)$. The last term is the variance of the estimator in the point $x_0$.
+
+The bias-variance decomposition gives a motivation to consider biased estimators. To get the lowest expected test error, we must find the right balance between the bias and the variance of the estimator. If the variance is sufficiently low, it is worthwhile to have a little bias.
