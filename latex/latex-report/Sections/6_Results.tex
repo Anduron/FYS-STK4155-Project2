@@ -14,9 +14,7 @@ The procedures for producing the following results are contained in Jupyter Note
 \subsection{Producing Data for 1D Ising Model}\label{sec:results datagen}
 %----------------------------------------------------------------
 
-Discuss counting in the all-to-all Ising model
-
-When doing the regression we included both $s_js_i$ and $s_is_j$ for all $i,j$ in the features. Since these quantities are equal, we do not get a unique solution for OLS, so we resort to SVD. SVD gives the coefficients with the least $L2$-norm. Hence we tend to get solutions $J_{i,j}=J_{j,i}=-0.5$. Ridge is similar in this regard, since it uses an $L2$ penalty. Lasso uses the $L1$-norm which doesn't differentiate between e.g. $J_{i,j}=-1$ and $J_{j,i} = 0$ on one hand and $J_{i,j}=J_{j,i}=-0.5$ on the other. Lasso tends to give coefficients which are equal to zero, which is consistent with what we have observed here.
+When doing the regression we included both $s_js_i$ and $s_is_j$ for all $i,j$ in the features. Since these quantities are equal, we do not get a unique solution for OLS, so we resort to singular value decomposition (SVD). SVD gives the coefficients with the least $L2$-norm. Hence we tend to get solutions $J_{i,j}=J_{j,i}=-0.5$. Ridge is similar in this regard, since it uses an $L2$ penalty. Lasso uses the $L1$-norm which doesn't differentiate between e.g. $J_{i,j}=-1$ and $J_{j,i} = 0$ on one hand and $J_{i,j}=J_{j,i}=-0.5$ on the other. Lasso tends to give coefficients which are equal to zero, which is consistent with what we have observed here.
 
 %----------------------------------------------------------------
 \subsection{Learning the Ising Hamiltonian with Linear Regression}\label{sec:results linreg}
@@ -98,7 +96,7 @@ When doing the regression we included both $s_js_i$ and $s_is_j$ for all $i,j$ i
 \label{fig:NN_reg}
 \end{figure}
 
-Figure \autoref{fig:NN_reg} shows the R2-score different neural networks predicting the energy of the Ising model, using features produced by the Generalized Ising model. As the real Ising model only include local coupling, only $80$ of the $1600$ features of the generalized model actually contribute to the energy. The interesting question to explore if the network is able to pick out the useful features and ignore the others. From the figure, we see that the more heavily penalised models perform generally better. In the same manner that Ridge and Lasso help linear regression suppress features of less importance and reduce variance, the regularizing the network produces better models, presumably by suppressing the weights connecting to the redundant features. 
+Figure \autoref{fig:NN_reg} shows the R2-score different neural networks predicting the energy of the Ising model, using features produced by the Generalized Ising model. As the real Ising model only include local coupling, only $80$ of the $1600$ features of the generalized model actually contribute to the energy. The interesting question to explore if the network is able to pick out the useful features and ignore the others. From the figure, we see that the more heavily penalised models perform generally better. In the same manner that Ridge and Lasso help linear regression suppress features of less importance and reduce variance, the regularizing the network produces better models, presumably by suppressing the weights connecting to the redundant features. To go a step further, a model using $\mu = 9e-5$ and $\lambda = 0.004$ was trained. This model yielded a R2-score of 0.26. 
 
 \begin{figure}[H]
 \centering
@@ -107,18 +105,31 @@ Figure \autoref{fig:NN_reg} shows the R2-score different neural networks predict
 \subfloat[]{{\includegraphics[scale=0.5]{latex/figures/pen2.png}}}
 \qquad
 \subfloat[]{{\includegraphics[scale=0.5]{latex/figures/pen3.png}}}
-\caption{Connection strength \autoref{eq:CS} of all }
-\label{fig:NN_reg}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.5]{latex/figures/pen4.png}}}
+\caption{Connection strength \autoref{eq:CS} of all inputs for the models of learning rate $\mu = 9e-5$ and penalties $0.0005$, $0.001$, $0.002$ and $0.004$. The red dots highlights the CS of the features that contribute to the energy. The horizontal lines are the average CS of the two groups just described, respectively.}
+\label{fig:NN_CS}
 \end{figure}
 
-To elaborate the previous point, figure \autoref{fig:NN_CS} visualises the Connection Strength(CS) \autoref{eq:CS} of all the inputs, with the CS of the contributing inputs highlighted by a red dot. Also the averages of the two groups are plotted. 
+To elaborate the previous point, figure \autoref{fig:NN_CS} visualises the Connection Strength(CS) \autoref{eq:CS} of all the inputs for models using learning rate  $\mu = 9e-5$ and penalties $0.0005$, $0.001$, $0.002$ and $0.004$. As suspected, the increase in penalty raises the average CS of the inputs that 
+contribute to the energy, making the network emphasize these inputs more. This ultimately yields a better model, until the penalty is raised to $0.004$. From the figure, the contributing features are separated from the others more than ever. However, the weights have been shrunk to the point where the model is fairly desensitized to the features, with a CS of the order 0.3 instead of 3. Not too surprisingly, the model performed terribly, with a R2-score of $0.26$.
 
+\begin{figure}[H]
+\centering
+\subfloat[]{{\includegraphics[scale=0.5]{latex/figures/NN_learn.png}}}
+\caption{R2-score of neural networks evaluated on a independent validation set. The models all use penalty $\lambda = 0.001$, with learning rate $\mu = 7e-5$, $9e-5$ and $1.1e-4$.}
+\label{fig:NN_learn}
+\end{figure}
 
-
-
-
+As a final note to the exploration of the learning behaviour, figure \autoref{fig:NN_learn} shows the R2-score on validation data progressively as the network is trained. The plot highlights the typical problems of tuning learning rate: The model with the smallest learning rate is constantly improving, but never reaching its potential since the step size is too small. On the other hand, the one with the highest learning rate might be continuously skipping over its local minima after getting fairly close at first, resulting in gradually degrading results.   
 
 
 %----------------------------------------------------------------
 \subsection{Identifying 2D Ising Model Phases with Neural Networks}\label{sec:results NN reg}
 %----------------------------------------------------------------
+
+
+An eye-catching result is the sudden ruination of one of the models, yielding a accuracy score of precisely zero. This is curious, since models with parameters in the same neighborhood yield sensible predictions. The answer lies in the execution of the code. When the faulty model was trained, the program once encountered "value encountered in true divide". This is a weakness of the cross-entropy. If the network misclassifies a label, and if the network is very sure in its (mis)classification, the derivate of the cross-entropy becomes enormous. This will likely ruin the weights during the next GD step, and the model too.
+
+Even though our prediction on the train and test of the ordered/disordered set were as good as Mehta's, our models did not generalize as good on the critical data. This could be that 400 nodes is not high enough complexity to capture the finer details needed to distinguish the critical states, or it could simply be 
+because the learning rate and penalty was not chosen precise enough: Since the training is very expensive, our grid search is rather course.

@@ -61,12 +61,12 @@ As seen in the figure, the value of the sigmoid function always lies between 0 a
 
 A linear regression model can be represented by
 \begin{equation}
-    y = \beta^T X
+    \bm{y} = \bm{\beta}^T \bm{X}
 \end{equation}
 
 The logistic regression models estimated probability is then
 \begin{equation}
-    \hat{p} = \sigma (\beta^T X),
+    \hat{p} = \sigma (\bm{\beta}^T \bm{X}),
 \end{equation}
 
 and the logistic regression model prediction is hence
@@ -81,7 +81,7 @@ Like for linear regression, we define a cost for our model and the objective wil
 The cost function of a single training instance can be given by
 
 \begin{equation}\label{eq:logcost}
-    C(\beta) = \begin{cases} - \log(\hat{p}) &\quad \text{if } y=1 \\ - \log(1-\hat{p}) &\quad \text{if } y=0  \end{cases}
+    C(\bm{\beta}) = \begin{cases} - \log(\hat{p}) &\quad \text{if } y=1 \\ - \log(1-\hat{p}) &\quad \text{if } y=0  \end{cases}
 \end{equation}
 
 \autoref{fig:logistic_cost} shows that this cost function makes sense.
@@ -99,14 +99,22 @@ As seen in the above figure, for $C(\beta) = - \log(\hat{p})$ the cost nears 0 a
 
 The total likelihood for all possible outcomes from a dataset $\mathcal{D} = \qty{\qty(y_i, x_i)}$ with binary labels $y_i \in \qty{0,1}$ and where the data points are drawn independently, can be defined in terms of the product of the individual probabilities of a specific outcome $y_i$ \cite{logreglec}:
 \begin{equation}
-    \hat{P} (\mathcal{D} | \beta) = \prod_i \qty(\hat{p}\qty(y_i = 1 | x_i \beta))^{y_i} \qty(1 - \hat{p}\qty(y_i = 1 | x_i \beta))^{1-y_i} = \prod_i \hat{p}_i^{y_i} \qty(1 - \hat{p}_i)^{1-y_i},
+    \hat{P} (\mathcal{D} | \bm{\beta}) = \prod_i \qty(\hat{p}\qty(y_i = 1 | x_i \bm{\beta}))^{y_i} \qty(1 - \hat{p}\qty(y_i = 1 | x_i \bm{\beta}))^{1-y_i} = \prod_i \hat{p}_i^{y_i} \qty(1 - \hat{p}_i)^{1-y_i},
 \end{equation}
 which should be maximized by the logistic regressor. Using the Maximum Likelihood Estimation (MLE) principle, we obtain the log-likelihood and the cost function over the whole dataset becomes, by arranging the sign so that it becomes a minimization problem,
 \begin{equation}\label{eq:cross-entropy}
-    J (\beta) = - \frac{1}{n} \sum_{i=1}^n \qty(y_i \log(\hat{p}_i) + (1-y_i) \log(1 - \hat{p}_i) )
+    J (\bm{\beta}) = - \sum_{i=1}^n \qty(y_i \log(\hat{p}_i) + (1-y_i) \log(1 - \hat{p}_i) )
 \end{equation}
-i.e., simply the average cost over all training instances. \autoref{eq:cross-entropy} is known in statistics as the cross-entropy.
+\autoref{eq:cross-entropy} is known in statistics as the cross-entropy.
 
+There is no known closed-form solution to compute the value of $\bm{\beta}$ that minimizes this cost function. It is, however, convex, so Gradient Descent (or any other optimization algorithm) is guaranteed to find the global minimum (with the right learning rate and sufficient time). \cite{Hands-onML} 
+
+The gradient of the cost function with regard to the model parameters $\bm{\beta}$ in compact matrix notation is given by
+\begin{equation}\label{eq:logcost deriv}
+    \nabla_{\bm{\beta}} J = -\bm{X}^T \qty(\bm{y} -\bm{\hat{p}})
+\end{equation}
+
+As with linear regression, we often supplement the logistic regressor with additional regularization terms to the cross-entropy, usually $L_1$ and $L_2$ regularization \cite{logreglec}.
 
 
 The performance of a logistic regression model can be measured with the accuracy score, given by
