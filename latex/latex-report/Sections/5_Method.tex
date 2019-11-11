@@ -5,12 +5,23 @@
 %----------------------------------------------------------------
 \subsection{Producing Data for 1D Ising Model}\label{sec:method datagen}
 %----------------------------------------------------------------
+Assuming no knowledge about the interactions between the spins, a choice of model can be
+\begin{equation}\label{eq:general}
+    H_{\text{model}}(\mathbf{s}^i) = -\sum_{j=1}^N\sum_{k=1}^N J_{j,k}s_j^is_k^i,
+\end{equation}
+where $\mathbf{s}^i$ is a particular spin configuration. By collecting all the two-body interactions $\{s_j^is_k^i\}$ for all $i=1,\ldots,N$ in a design matrix $\mathbf{X}$, and all the non-local coupling strengths $J_{j,k}$ in a vector $\mathbf{J}$, we can write this as
+\begin{equation*}
+    (H_{\text{model}}(\mathbf{s}^1), \ldots, H_{\text{model}}(\mathbf{s}^N))^T = \mathbf{X}\mathbf{J}.
+\end{equation*}
+With this formulation we can use regression methods from project 1 to find the coefficients $\mathbf{J}$.
+
 
 Recast to Linreg problem 
 
 Generate data
 System size $L=40$ and $N=10\,000$ number of points. 
 Split data into 4\% training and 96\% test sets.
+
 
 %----------------------------------------------------------------
 \subsection{Learning the Ising Hamiltonian with Linear Regression}\label{sec:method linreg}
@@ -26,6 +37,70 @@ Bias-variance analysis using bootstrap
 %----------------------------------------------------------------
 
 %----------------------------------------------------------------
-\subsection{Identifying 2D Ising Model Phases with Neural Networks}\label{sec:method NN}
-%----------------------------------------------------------------
+\subsection{Neural Networks}\label{sec:method NN}
+\subsubsection{Implementation}
+For this project, neural networks has been implemented as a python class using standard numpy for linear operations. The architecture can be chosen arbitrarily, i.e. the number of neurons, layers, activation functions and a cost function .
 
+To train the network, one must supply a training set and validation set. The choice of optimization is batch gradient decent. The learning rate, penalty, batch size and number of epoch must be supplied. After each epoch, the accuracy of the network is evaluated and stored using the cost function on both the training data and validation data. This is then used later to evaluate how the network learned.
+
+\subsubsection{Regression on Energy of Generalized Ising Model using Neural 
+Networks}
+
+In the same manner as described in \autoref{sec:method datagen}, a set of energies 
+as targets were produced by the real Ising model \autoref{eq:ising 1D energy}, but the features were assumed to originate from an unknown model(generalized Ising model). Using a neural network, the energies were attempted learned from the $1600$ features, of which only $80$ have real explanatory ability(those who contribute in the real model). The parameters of the neural network can be summarized in \autoref{tab:nn_params}.
+
+
+\begin{table}[H]
+\caption{Parameters of the neural network.}
+\centering
+\rowcolors{2}{gray!25}{white}
+\begin{tabular}{c|c}
+\hline
+\hline
+Number of Neurons & 400 (one layer)  \\ \hline
+Hidden layer activation & $\tanh$   \\ \hline
+Output activation & Unmodified  \\ \hline
+Cost function & Squared Loss \\ \hline
+Learning rate & $7\cdot 10^{-5}$, $9 \cdot 10^{-5}$, $11 \cdot 10{-5}$  \\ \hline
+Penalty & $5 \cdot 10{-4}$, $1 \cdot 10^{-3}$, $2 \cdot 10^{-3}$  \\ \hline
+Batch size & $100$  \\ \hline
+Epochs & $50$  \\ 
+\hline
+\hline
+\end{tabular}
+\label{tab:nn_params}
+\end{table}
+
+Several models are trained using a grid search using the different learning rates 
+and penalties. The R2-score is used to evaluate the models.
+
+To investigate how the networks respond to the dummy features introduced by the generalized Ising model, we introduce a measure "Connection Strength". The connection strength (CS) of a neuron $n^l_j$ is defined as the absolute sum of all the weights that connect that neuron to the next layer:
+
+\begin{equation}\label{eq:CS}
+    CS = \sum_i |w^{l+1}_{ji}|
+\end{equation}
+
+This is may be though of a measure of how much a particular neuron connects to the next layer. When evaluated on a input feature, we interpret it as how much that feature in particular influence the model. In the case that the CS is zero, the feature has no influence whatsoever.
+
+\subsubsection{Identifying 2D Ising Model Phases with Neural Networks}
+The data trained on are the same as described in \autoref{sec:method logreg}, from \cite{Mehta_2019}. The network is trained on the combined orders and disordered states. The model is then evaluated on an independent test set collected from the same combined set. In addition, the model is evaluated on a set consisting of the critical states to explore the generalizability of the model. 
+
+The parameters of the neural network can be summarized in this table:
+
+\begin{table}[H]
+\begin{tabular}{|l|l|}
+\hline
+Number of Neurons & 400, One layer  \\ \hline
+Hidden layer activation & Sigmoid   \\ \hline
+Output activation & Sigmoid  \\ \hline
+Cost function & Cross Entropy \\ \hline
+Learning rate & $1e-5$, $2e-5$, $3e-5$  \\ \hline
+Penalty & $1e-5$, $1e-4$, $1e-3$  \\ \hline
+Batch size & $100$  \\ \hline
+Epochs & $50$  \\ \hline
+\end{tabular}
+\end{table}
+
+Several models are trained using a grid search using the different learning rates 
+and penalties. The accuracy score (Ref) is used to evalue the models.
+%----------------------------------------------------------------
