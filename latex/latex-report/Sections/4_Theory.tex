@@ -34,88 +34,95 @@ Linear regression is used to predict the value of a continuous dependent variabl
 %--------------------------------------------------------------
 \subsection{Logistic Regression}\label{sec:logreg theory}
 %--------------------------------------------------------------
-Some regression algorithms can be used for classification
+Some regression algorithms can be used for classification. Logistic regression can be used to classify instances into different classes by modelling the probability of a certain class or event existing. Unlike linear regression, the dependent  variables (also called responses or outcomes), $y_i$, is categorical, that is, $y_i$ are discrete and only take values from $K=0, ..., K-1$ (i.e. $K$ classes). The goal is to predict the output classes from the design matrix $X \in \R^{n\times p}$ made of $n$ samples, each of which carries $p$ features or predictors, with the primary goal being able to identify which classes unseen samples belong to. \cite{logreglec} \cite{Hands-onML}
 
+We limit the following discussion to logistic regression as a binary classifier only, i.e. only two classes, here called positive and negative with corresponding outputs $y_i = 1$ and $y_i=0$.
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Motivate
-
-logistic function
-
-MLE - cross-entropy
-
-binary - general?
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Logistic regression can be used to classify instances into different classes by modelling the probability of a certain class or event existing e.g. win/lose, 1/0 etc. 
-
-We look at the case of two classes, positive and negative, corresponding to the outputs $y=1$ and $y=0$.
-
-\textbf{The Sigmoid Function}
-
-In linear regression the output is the weighted sum of inputs. In logistic regression the output is not the weighted sum directly, we rather pass it through an \textit{activation function} that can map any real value between 0 and 1. The activation function is known as the \textit{sigmoid} (or \textit{logit}) function, and is given by
+\subsubsection{The Sigmoid Function}
+In linear regression the output is the weighted sum of inputs. In logistic regression the output is not the weighted sum directly, we rather pass it through an activation function that can map any real value between 0 and 1. \cite{Hands-onML} The activation function is known as the sigmoid (or logit) function, and is given by
 
 \begin{equation}\label{eq:sigmoid_func}
-    \sigma (t) = \frac{1}{1+ e^{-t}}
+    \sigma (t) = \frac{1}{1+ e^{-t}} = \frac{e^t}{1+e^t}
 \end{equation}
+Note that $1-\sigma(t) = \sigma (-t)$
 
-\autoref{fig:logistic}
+The sigmoid function is shown in \autoref{fig:logistic}.
 
 \begin{figure}[H]
 \begin{center}\includegraphics[scale=0.6]{latex/figures/logistic_function.pdf}
 \end{center}
-\caption{Logistic}
+\caption{The sigmoid function is an activation function that can map any real value between 0 and 1.}
 \label{fig:logistic}
 \end{figure}
 
-As seen in the figure, the value of the sigmoid function always lies between 0 and 1. The value is exactly 0.5 at $t=0$. Thus, 0.5 can be used as the probability threshold, $p$, to determine the classes. If $p \geq 0.5$ the instance $t$ belongs to the positive class ($y = 1$), or else we classify it as the negative class ($y = 0$).
+As seen in the figure, the value of the sigmoid function always lies between 0 and 1. The value is exactly 0.5 at $t=0$. Thus, 0.5 can be used as the probability threshold, $p$, to determine the classes. If $p \geq 0.5$ the instance $t$ belongs to the positive class ($y = 1$), or else we classify it as the negative class ($y = 0$). \cite{Hands-onML}
 
-\textbf{The Logistic Regression Model}
+\subsubsection{The Logistic Regression Model}
 
 A linear regression model can be represented by
-
 \begin{equation}
-    y = \beta^T X
+    \bm{y} = \bm{\beta}^T \bm{X}
 \end{equation}
 
 The logistic regression models estimated probability is then
-
 \begin{equation}
-    \hat{p} = \sigma (\beta^T X),
+    \hat{p} = \sigma (\bm{\beta}^T \bm{X}),
 \end{equation}
 
 and the logistic regression model prediction is hence
-
 \begin{equation}
 \hat{y} = \begin{cases} 0 \quad \text{if } \hat{p} < 0.5 \\ 1 \quad \text{if } \hat{p} \geq 0.5 \end{cases} 
 \end{equation}
 
-\textbf{The Cost Function}
 
+\subsubsection{The Cost Function}
 Like for linear regression, we define a cost for our model and the objective will be to minimize the cost.
 
 The cost function of a single training instance can be given by
 
-\begin{equation}
-    C(\beta) = \begin{cases} - \log(\hat{p}) &\quad \text{if } y=1 \\ - \log(1-\hat{p}) &\quad \text{if } y=0  \end{cases}
+\begin{equation}\label{eq:logcost}
+    C(\bm{\beta}) = \begin{cases} - \log(\hat{p}) &\quad \text{if } y=1 \\ - \log(1-\hat{p}) &\quad \text{if } y=0  \end{cases}
 \end{equation}
 
-To show that this cost function makes sense, we plot a simplified version with $t=\beta^T X$ below.
-
-\autoref{fig:logistic_cost}
+\autoref{fig:logistic_cost} shows that this cost function makes sense.
 
 \begin{figure}[H]
 \begin{center}\includegraphics[scale=0.6]{latex/figures/logistic_cost_func.pdf}
 \end{center}
-\caption{Logistic cost}
+\caption{The logistic cost function for a single training instance given by \autoref{eq:logcost}.}
 \label{fig:logistic_cost}
 \end{figure}
 
-The objective of the cost function is to heavily penalize the model if it predicts a negative class ($y=0$) if the actual class is positive ($y=1$) and vice-versa. 
+The objective of the cost function is to heavily penalize the model if it predicts a negative class ($y=0$) if the actual class is positive ($y=1$) and vice-versa. \cite{Hands-onML}
 
 As seen in the above figure, for $C(\beta) = - \log(\hat{p})$ the cost nears 0 as $\hat{p}$ approaches 1 and as $\hat{p}$ nears 0 the cost goes toward infinity (that is, we penalize the model heavily). Similarly, for $C(\beta) = - \log(1 - \hat{p})$, when the actual value is 0 and the model predicts 0, the cost is 0, and the cost goes toward infinity as $\hat{p}$ approaches 1.
+
+The total likelihood for all possible outcomes from a dataset $\mathcal{D} = \qty{\qty(y_i, x_i)}$ with binary labels $y_i \in \qty{0,1}$ and where the data points are drawn independently, can be defined in terms of the product of the individual probabilities of a specific outcome $y_i$ \cite{logreglec}:
+\begin{equation}
+    \hat{P} (\mathcal{D} | \bm{\beta}) = \prod_i \qty(\hat{p}\qty(y_i = 1 | x_i \bm{\beta}))^{y_i} \qty(1 - \hat{p}\qty(y_i = 1 | x_i \bm{\beta}))^{1-y_i} = \prod_i \hat{p}_i^{y_i} \qty(1 - \hat{p}_i)^{1-y_i},
+\end{equation}
+which should be maximized by the logistic regressor. Using the Maximum Likelihood Estimation (MLE) principle, we obtain the log-likelihood and the cost function over the whole dataset becomes, by arranging the sign so that it becomes a minimization problem,
+\begin{equation}\label{eq:cross-entropy}
+    J (\bm{\beta}) = - \sum_{i=1}^n \qty(y_i \log(\hat{p}_i) + (1-y_i) \log(1 - \hat{p}_i) )
+\end{equation}
+\autoref{eq:cross-entropy} is known in statistics as the cross-entropy.
+
+There is no known closed-form solution to compute the value of $\bm{\beta}$ that minimizes this cost function. It is, however, convex, so Gradient Descent (or any other optimization algorithm) is guaranteed to find the global minimum (with the right learning rate and sufficient time). \cite{Hands-onML} 
+
+The gradient of the cost function with regard to the model parameters $\bm{\beta}$ in compact matrix notation is given by
+\begin{equation}\label{eq:logcost deriv}
+    \nabla_{\bm{\beta}} J = -\bm{X}^T \qty(\bm{y} -\bm{\hat{p}})
+\end{equation}
+
+As with linear regression, we often supplement the logistic regressor with additional regularization terms to the cross-entropy, usually $L_1$ and $L_2$ regularization \cite{logreglec}.
+
+
+The performance of a logistic regression model can be measured with the accuracy score, given by
+\begin{equation}\label{eq:accuracy score}
+    \text{Accuracy} = \frac{\sum_{i=1}^n I(t_i = y_i)}{n},
+\end{equation}
+where $I$ is the indicator function, 1 if $t_i = y_i$ and 0 otherwise, where $t_i$ represents the target and $y_i$ the outputs. A perfect classifier will have a score of 1.
+
 
 
 %--------------------------------------------------------------
@@ -181,13 +188,13 @@ previous hidden layer, or the inputs, it case it is the first hidden layer in th
 network. For the i'th node in the first hidden layer, its activation is 
 calculated as
 \begin{equation}\label{eq:activation}
-    z^1_i = \sum_{j=1}^N W^1_{ij}x_j + b^1_j,
+    z^1_j = \sum_{i=1}^N W^1_{ji}x_j + b^1_j,
 \end{equation}
 where $N$ is the number of inputs $x$, $W^1$ is a matrix of the weights connecting the inputs to the first hidden layer, and $b^1$ is a constant bias term added to the activation. Taking the activation as the output of the first hidden layer, \autoref{eq:activation} defines a method of feeding information to the next hidden layer as well, and ultimately through the entire network. However, it can easily be seen from the equation that the feeding of information from one layer to another is a affine transformation. Since a affine transformation of a affine transformation is a affine transformation in itself, adding more layers to a network fails in making a more complex model. To avoid this collapse of 
 layers, we need to introduce a non-linear function $f^1$ to the activation before 
 passing it to the next layer
 \begin{equation}\label{eq:non_linear}
-    a^1_i = f^1(z^1_i)
+    a^1_j = f^1(z^1_j)
 \end{equation}
 
 Non-linear functions used are typically sigmoid, $\tanh$ or the Relu, and enables neural network of becoming powerful and flexible models.
@@ -213,4 +220,42 @@ and cross entropy for binary classification
 
 For a untrained neural network, the weights $W$ connecting all the layers are typically initialized in random fashion, popularly as $W \sim N(0,1)$, and the biases $b$ set to a small number such as $0.01$. 
 
-To improve the model from the initial random state, we would like to minimize the cost function with respect to the weights. As the neural network is a very complex function, and not even a convex problem where are minima are global minema, the optimal weights can not be found by $\frac{dC}{dW^l_{ij}} = 0$. Instead, we resort to using gradient decent methods.
+To improve the model from the initial random state, we would like to minimize the cost function with respect to the weights. As the neural network is a very complex function, and not even a convex problem where are minima are global minima, the optimal weights can not be found by $\frac{dC}{dW^l_{ij}} = 0$. Instead, we resort to using gradient decent methods.
+
+To compute the gradient $\frac{dC}{dW^l_{ij}}$, we use the chain rule repeatedly to produce an expression that keeps track of how the variation of the cost function propagates backward in the neural network, so-called backward propagation.
+
+To start, we calculate the derivative of the cost function with respect to the weights of the last hidden layer:
+
+\begin{equation}\label{eq:gradient}
+    \frac{dC}{dw^L_{ij}} = \frac{dC}{da_j^L} \frac{da_j^L}{dw^L_{ij}} 
+    = \frac{dC}{da_j^L} f'(z_j^L) \frac{dz^L_j}{dw^L_{ij}} = \frac{dC}{da_j^L} f'(z_j^L) a^{L-1}_i
+\end{equation}
+where we have used the chain rule repeatedly and the definition of the activation \autoref{eq:activation}.
+
+Defining $\delta_j^L = \frac{dC}{da_j^L} f'(z_j) = \frac{dC}{dz_j^L}$, we can now look at the derivative of an arbitrary layer $l$:
+
+\begin{equation}\label{eq:Backward}
+   \delta_j^l = \frac{dC}{dz^l_j} = \sum_k \frac{dC}{dz^{l+1}_k} \frac{dz^{l+1}_k}{dz^{l}_j} = \sum_k \delta_k^{l+1} \frac{dz^{l+1}_k}{dz^{l}_j}
+   = \sum_k \delta_k^{l+1} w_{kj}^{l+1}f'(z^l_j)
+\end{equation}
+This enables us to calculate the error propagation to an arbitrary layer, and we can calculate the gradient from \autoref{eq:gradient}. The update rules for a standard GD thus becomes
+
+\begin{equation}\label{eq:grad step}
+    w^l_{jk} \rightarrow w^l_{jk} - \mu \delta_j^l a_k^{l-1}  
+\end{equation}
+\begin{equation*}\label{}
+    b^l_{j} \rightarrow b^l_{j} - \mu \delta_j^l 
+\end{equation*}
+where $\mu$ is the learning rate.
+
+\subsubsection{Regularization}
+
+Neural networks quickly grow in complexity as you increase the number of hidden layers and number of neurons for each layer. one must take care not to overfit the networks. A common approach is to add the L2-norm of the weights to the cost function, in the same spirit as the ridge regression:
+\begin{equation*}
+    C(y, \tilde{y}) = \sum_i(y_i - \tilde{y_i})^2 + \lambda \sum_{ijl}{w^l_{ij}}^2
+\end{equation*}
+This changes the update rule for the weights to
+\begin{equation}\label{eq:grad step}
+    w^l_{jk} \rightarrow w^l_{jk} - (\mu \delta_j^l a_k^{l-1} + \lambda'w^l_{jk}) 
+\end{equation}
+where $\lambda' = \mu \lambda$.
