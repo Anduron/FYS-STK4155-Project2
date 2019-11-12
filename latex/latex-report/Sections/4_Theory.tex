@@ -16,7 +16,7 @@ where the spins $s=\pm 1$, $\ev{kl}$ indicates that the sum is over the nearest 
 For $J>0$ it is energetically favorable for neighboring spins to be aligned, and the magnetic system will have a ferromagnetic ordering. Ferromagnetic materials exhibit a long-range ordering phenomenon where a given magnetic moment, through interactions between nearest neighbors, can influence the alignment of spins that are separated from the given spin by a macroscopic distance.
 At temperatures below the Curie temperature, $T_C$, the ordering of spin states lead to a phenomenon called spontaneous magnetization. That is, the lattice has a net magnetization even in the absence of an external magnetic field. For temperatures $T\geq T_C$, however, the ferromagnetic property disappears as a result of thermal agitation. \cite{PROJising}
 
-In the regression part of this study, we will consider the one-dimensional Ising model with nearest neighbor interactions on a chain of length $N$ with periodic boundary conditions, that is, spins at the boundary will have its nearest neighbors at the opposite boundary. In one-dimension \autoref{eq:ising energy} reduces to 
+In the linear regression part of this study, we will consider the one-dimensional Ising model with nearest neighbor interactions on a chain of length $N$ with periodic boundary conditions, that is, spins at the boundary will have its nearest neighbors at the opposite boundary. In one-dimension \autoref{eq:ising energy} reduces to 
 
 \begin{equation}\label{eq:ising 1D energy}
     H  = - J \sum_{j=1}^N s_j s_{j+1},
@@ -107,14 +107,23 @@ which should be maximized by the logistic regressor. Using the Maximum Likelihoo
 \end{equation}
 \autoref{eq:cross-entropy} is known in statistics as the cross-entropy.
 
-There is no known closed-form solution to compute the value of $\bm{\beta}$ that minimizes this cost function. It is, however, convex, so Gradient Descent (or any other optimization algorithm) is guaranteed to find the global minimum (with the right learning rate and sufficient time). \cite{Hands-onML} 
-
-The gradient of the cost function with regard to the model parameters $\bm{\beta}$ in compact matrix notation is given by
+The gradient of the cross-entropy with regard to the model parameters $\bm{\beta}$ in compact matrix notation is given by
 \begin{equation}\label{eq:logcost deriv}
     \nabla_{\bm{\beta}} J = -\bm{X}^T \qty(\bm{y} -\bm{\hat{p}})
 \end{equation}
+in \cite{logreglec}.
 
-As with linear regression, we often supplement the logistic regressor with additional regularization terms to the cross-entropy, usually $L_1$ and $L_2$ regularization \cite{logreglec}.
+There is no known closed-form solution to compute the value of $\bm{\beta}$ that minimizes the cross-entropy, i.e. the equation $\nabla_{\bm{\beta}} J = \bm{0}$ has no analytic solution. The cross-entropy is, however, convex, so Gradient Descent (or any other optimization algorithm) is guaranteed to find the global minimum (with the right learning rate and sufficient time) \cite{Hands-onML}.
+
+As with linear regression, we often supplement the logistic regressor with additional regularization terms to the cross-entropy, usually $L_1$ and $L_2$ regularization \cite{logreglec}. With $L_2$ regularization the cross entropy reads
+\begin{equation}\label{eq:cross-ent with L2 reg}
+    J (\bm{\beta}) = - \sum_{i=1}^n \qty(y_i \log(\hat{p}_i) + (1-y_i) \log(1 - \hat{p}_i) ) + \frac{1}{2} \lambda \norm{\bm{\beta}}_2^2,
+\end{equation}
+which simply adds a term to the gradient
+\begin{equation}\label{eq:logcost deriv L2 reg}
+    \nabla_{\bm{\beta}} J = -\bm{X}^T \qty(\bm{y} -\bm{\hat{p}}) + \lambda \bm{\beta}
+\end{equation}
+where $\lambda$ is the regularization parameter. 
 
 
 The performance of a logistic regression model can be measured with the accuracy score, given by
@@ -166,7 +175,7 @@ In general Newton-Raphson is not guaranteed to work. Sufficient conditions are g
   \end{equation*}
   for any $x,y\in U$.
 
-Let $x_0\in U$ and suppose that $Df(x_0)$ is invertible. Find a number $K$ with $\norm{Df(x_0)^{-1}}\le K$, and assume that the closed ball $B\left(x_0,\frac{1}{KM}\right)$, with center in $x_0$ and radius $\frac{1}{KM}$ is contained in $U$. If
+Let $x_0\in U$ and suppose that $Df(x_0)$ is invertible. Find a number $K$ with $\norm{Df(x_0)^{-1}}\le K$, and assume that the closed ball $\overline{B}\left(x_0,\frac{1}{KM}\right)$, with center in $x_0$ and radius $\frac{1}{KM}$ is contained in $U$. If
 \begin{equation*}
   \norm{x_1-x_0}=\norm{Df(x_0)^{-1}f(x_0)}\le\frac{1}{2KM},
 \end{equation*}
