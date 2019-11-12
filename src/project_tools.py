@@ -39,7 +39,7 @@ def df_to_latex(df, outfile):
     n = len(df.columns)
     col_format = n * 'c'
     # Render dataframe to a LaTeX tabular environment table and write to file
-    pd.options.display.float_format = '{:,.3f}'.format
+    pd.options.display.float_format = '{:,.5f}'.format
     df = df.apply(lambda x: x.astype(
         int) if np.allclose(x, x.astype(int)) else x)
     pd.options.display.latex.escape = False

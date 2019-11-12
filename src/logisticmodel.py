@@ -280,6 +280,23 @@ class LogisticRegression(MLModelTools):
         self._lmbda = lmbda
         return self
 
+    def set_eta(self, eta):
+        """
+        Set learning rate.
+
+        Parameters
+        ----------
+        eta : float
+            Value of the learning rate
+
+        Returns
+        -------
+        object : self
+        """
+
+        self._eta = eta
+        return self
+
 
 if __name__ == "__main__":
     from sklearn import datasets
