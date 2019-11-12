@@ -102,13 +102,51 @@ $\alpha$ & $\beta$ & $\gamma$
 \label{tab:tab1}
 \end{table}
 
-aaaa
 
+Optimal parameters, figures of acc 
 
-figures of acc
+\autoref{fig:gd_acc_lambda}
+
+\begin{figure}[H]
+\centering
+\subfloat[]{{\includegraphics[scale=0.5]{latex/figures/log_acc_eta_0_0001.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.5]{latex/figures/log_acc_eta_0_001.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.5]{latex/figures/log_acc_eta_0_01.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.5]{latex/figures/log_acc_eta_0_1.pdf}}}
+\caption{figure text}
+\label{fig:gd_acc_lambda}
+\end{figure}
 
 tables with max acc. the full table can be found in appendix B
 
+\autoref{tab:opt params train}, \autoref{tab:opt params test} and \autoref{tab:opt params crit} tabulates the maximum accuracy for the ordered, disordered and critical phases, respectively. All tables also lists the value of the parameters as well as the accuracy score of the other two phases. The full table from which these were retrieved can be found in as \autoref{tab:full table} in \autoref{sec:Appendix B}.
+
+\begin{table}[H]
+\caption{Table text}
+\centering
+\rowcolors{2}{gray!25}{white}
+\input{latex/tables/opt_params_train_max}
+\label{tab:opt params train}
+\end{table}
+
+\begin{table}[H]
+\caption{Table text}
+\centering
+\rowcolors{2}{gray!25}{white}
+\input{latex/tables/opt_params_test_max}
+\label{tab:opt params test}
+\end{table}
+
+\begin{table}[H]
+\caption{Table text}
+\centering
+\rowcolors{2}{gray!25}{white}
+\input{latex/tables/opt_params_crit_max}
+\label{tab:opt params crit}
+\end{table}
 
 There are no clear optimal parameters, and the accuracy with a particular set of parameters also changes for different runs. None of the best accuracies are great either. However, we stick with the best result for the maximum training accuracy in the table above on a larger training set (20\%). The results are shown in table
 
