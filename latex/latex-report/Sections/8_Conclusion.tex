@@ -2,3 +2,9 @@
 \section{Conclusion}\label{sec:Conclusion}
 %================================================================
 
+Logistic regression is not able to correctly fit the Ising model as it is not a linear model, and is, in the case with both Gradient Descent and Newton-Raphson as optimization methods, no better than just guessing.
+
+
+Neural networks proved useful to predict the energy of the Ising model (\autoref{fig:NN_reg}), even in the presence of a high number of useless features produced by the generalized Ising model. The final R2-score on test data was $94.3\%$. Regularization was proved crucial in order to eliminate the influence of features that did not contribute to the energy (\autoref{fig:NN_CS}). Compared to OLS and Ridge for determining coupling constants, which is a similar problem, neural networks performed generally better, though not as good as Lasso. (egne siteringer her)
+
+We managed to reproduce the same order of accuracy when determining the phase of the Ising model as Mehta, for neural networks trained on the ordered/disordered set(\autoref{fig:NN_class}). However, our models did not generalize as good on the critical data set. This may be a shortcoming of our simpler network, using only 400 nodes instead of 1000 as Mehta. This was chosen because of computationally limitations. Another major factor is our very coarse grid search, testing for only 3 learning rates and penalties. 

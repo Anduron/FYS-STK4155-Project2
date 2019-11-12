@@ -3,9 +3,9 @@
 %================================================================
 
 %----------------------------------------------------------------
-\subsection{Producing Data for 1D Ising Model}\label{sec:method datagen}
+\subsection{Learning the Ising Hamiltonian with Linear Regression}\label{sec:method linreg}
 %----------------------------------------------------------------
-Assuming no knowledge about the interactions between the spins, a choice of model can be
+We want to predict the total energy of the system based on the spin configuration. Assuming no knowledge about the interactions between the spins, a choice of model can be
 \begin{equation}\label{eq:general}
     H_{\text{model}}(\mathbf{s}^i) = -\sum_{j=1}^N\sum_{k=1}^N J_{j,k}s_j^is_k^i,
 \end{equation}
@@ -13,28 +13,35 @@ where $\mathbf{s}^i$ is a particular spin configuration. By collecting all the t
 \begin{equation*}
     (H_{\text{model}}(\mathbf{s}^1), \ldots, H_{\text{model}}(\mathbf{s}^N))^T = \mathbf{X}\mathbf{J}.
 \end{equation*}
-With this formulation we can use regression methods from project 1 to find the coefficients $\mathbf{J}$.
+With this formulation we can use regression methods from project 1 (OLS, Ridge and Lasso), see \autoref{sec:Appendix A} or \cite{PROJone}, to find the coefficients $\mathbf{J}$.
 
+We generate $N = 10\,000$ spin configurations, each consisting of $40$ spins. The spins take values in $\{-1,1\}$ and are uniformly distributed. The energy of each system is calculated in accordance with \cref{eq:ising 1D energy} for $J=1$.
 
-Recast to Linreg problem 
+In order to assess the models, we use the $R^2$ score, given by \autoref{eq:R2}, and mean squared error (MSE), given by \autoref{eq:MSE}, as measures of performance. 
 
-Generate data
-System size $L=40$ and $N=10\,000$ number of points. 
-Split data into 4\% training and 96\% test sets.
-
-
-%----------------------------------------------------------------
-\subsection{Learning the Ising Hamiltonian with Linear Regression}\label{sec:method linreg}
-%----------------------------------------------------------------
-Perform OLS, Ridge, Lasso regression to estimate the coupling constant
-
-Assess models: 
-$R^2$ score and MSE as measures of performance
-Bias-variance analysis using bootstrap
+A bias-variance analysis using the bootstrap resampling method for best model selection will also be carried out.
 
 %----------------------------------------------------------------
 \subsection{Identifying 2D Ising Model Phases with Logistic Regression}\label{sec:method logreg}
 %----------------------------------------------------------------
+
+Here, we use the binary classification method logistic regression, as discussed in \autoref{sec:logreg theory}, to predict if a given state of the two-dimensional Ising model is ordered or disordered. The data, provided by Metha et. al \cite{Mehta_2019}, is a set of spin configurations labeled ordered 1 or disordered 0. The goal is to build a model which will take in a spin configuration and predict whether it constitutes an ordered or disordered phase. The lattices are represented as flattened arrays with $1\,600$ elements instead of a matrix of $40 \times 40$ elements. The dataset is first divided into three pieces, each consisting of either the ordered, disordered or "critical-like" phase. Next, we make training and test sets of the ordered and disordered phases. The remaining critical states will be used as held-out test data which the hope is that we will be able to make good extrapolated predictions on.
+
+\autoref{fig:2d_ising_states} shows some states from the data set for both the ordered and disordered phase, and the critical region as well. 
+
+\begin{figure}[H]
+\begin{center}\includegraphics[scale=0.5]{latex/figures/ising_states.pdf}
+\end{center}
+\caption{figure text}
+\label{fig:2d_ising_states}
+\end{figure}
+
+GD - find optimal pair values for the learning rate $\eta$ and regularization parameter $\lambda$ the on a small training set by. best pair of values will be which give the highest accuracy score, see \autoref{eq:accuracy score}, for both the training and test set and ultimately the held-out set with the critical states. We will then use the optimal parameters on a larger training set, with the hope that it gives a even higher prediction accuracy.
+
+ROC curve
+
+
+To conclude the logistic regression analysis, we try to use Newton-Raphson's method for optimization (see \autoref{sec:newton-raphson method}). This method has a notoriously slow iterative scheme, so we will only apply it on a small training set and with few iterations. A ROC curve will also be presented for this method
 
 %----------------------------------------------------------------
 \subsection{Neural Networks}\label{sec:method NN}
