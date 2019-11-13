@@ -2,4 +2,6 @@
 \section{Future Work}\label{sec:Future}
 %================================================================
 
-The \cw{LogisticRegression} class should be extended to include other optimization methods, such as Stochastic Gradient Descent and Mini-batch Gradient Descent. As became evident from our logistic regression analysis, standard Gradient Descent and Newton-Raphson's method are slow to use on large training instances. Both Stochastic Gradient Descent and Mini-Batch Gradient Descent should perform better on these cases.  
+The \cw{LogisticRegression} class should be extended to include other optimization methods, such as Stochastic Gradient Descent and Mini-batch Gradient Descent. As became evident from our logistic regression analysis, standard Gradient Descent and Newton-Raphson's method are slow to use on large training instances. Both Stochastic Gradient Descent and Mini-Batch Gradient Descent should perform better on these cases. 
+
+Implementing random search rather than grid search when optimizing hyper parameters will likely result in better models, since grid search is very computationally heavy. Further, doing the same neural network analysis using frameworks such as Tensorflow, Keras or Pytouch would provide a helpfull benchmark for comparison.
