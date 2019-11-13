@@ -63,18 +63,19 @@ def mse(y, y_pred):
 class NeuralNetwork():
 
     def __init__(self, dim, acf, cost):
-        self.dim = dim
-        self.acf = np.array(acf)
+        self.dim = dim    # dimmensions of layers
+        self.acf = np.array(acf)  # list of activation functions
         self.cost = cost
 
         self.W = np.empty(len(dim) - 1, dtype=np.ndarray)  # weight matricies
         self.b = np.empty(len(dim) - 1, dtype=np.ndarray)  # biases
-        self.z = np.empty(len(dim), dtype=np.ndarray)
+        self.z = np.empty(len(dim), dtype=np.ndarray)      # activation
         self.a = np.empty(len(dim), dtype=np.ndarray)
         self.grad = np.empty(len(dim) - 1, dtype=np.ndarray)
         self.delta = np.empty(len(dim) - 1, dtype=np.ndarray)
 
         for i in range(len(dim) - 1):
+            # Set dimmensions of weights and biases
             m = dim[i + 1]
             n = dim[i]
             self.W[i] = np.random.normal(0, 1, (m, n))
@@ -98,6 +99,7 @@ class NeuralNetwork():
                 self.acf[i - 1].deriv(self.z[i])
 
     def train(self, X, y, X_val, y_val, mu, lamb, batch_size, epochs, accuracy):
+        # recast to the right dimmensions
         if len(y.shape) == 1:
             y = y[:, np.newaxis]
 
@@ -107,6 +109,7 @@ class NeuralNetwork():
         n = len(y)
         num_iters = int(n / batch_size)
 
+        # intermediate accuracy during training
         self.acc_train = []
         self.acc_val = []
 
