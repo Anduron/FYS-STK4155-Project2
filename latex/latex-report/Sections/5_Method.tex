@@ -7,7 +7,7 @@
 %----------------------------------------------------------------
 We want to predict the total energy of the system based on the spin configuration. Assuming no knowledge about the interactions between the spins, a choice of model can be
 \begin{equation}\label{eq:general}
-    H_{\text{model}}(\mathbf{s}^i) = -\sum_{j=1}^N\sum_{k=1}^N J_{j,k}s_j^is_k^i,
+    H_{\text{model}}(\mathbf{s}^i) = - \sum_{j=1}^N\sum_{k=1}^N J_{j,k}s_j^is_k^i,
 \end{equation}
 where $\mathbf{s}^i$ is a particular spin configuration. By collecting all the two-body interactions $\{s_j^is_k^i\}$ for all $i=1,\ldots,N$ in a design matrix $\mathbf{X}$, and all the non-local coupling strengths $J_{j,k}$ in a vector $\mathbf{J}$, we can write this as
 \begin{equation*}
@@ -25,16 +25,20 @@ A bias-variance analysis using the bootstrap resampling method for best model se
 \subsection{Identifying 2D Ising Model Phases with Logistic Regression}\label{sec:method logreg}
 %----------------------------------------------------------------
 
-Here, we use the binary classification method logistic regression, as discussed in \autoref{sec:logreg theory}, to predict if a given state of the two-dimensional Ising model is ordered or disordered. The data, provided by Metha et. al \cite{Mehta_2019}, is a set of spin configurations labeled ordered 1 or disordered 0. The goal is to build a model which will take in a spin configuration and predict whether it constitutes an ordered or disordered phase. The lattices are represented as flattened arrays with $1\,600$ elements instead of a matrix of $40 \times 40$ elements. The dataset is first divided into three pieces, each consisting of either the ordered, disordered or "critical-like" phase. Next, we make training and test sets of the ordered and disordered phases. The remaining critical states will be used as held-out test data which the hope is that we will be able to make good extrapolated predictions on.
+Here, we use the binary logistic regression, as discussed in \autoref{sec:logreg theory}, and the two-dimensional Ising model with Hamiltonian given by \autoref{eq:ising energy}. Opposed to the one-dimensional Ising model, we will get a phase transition from an ordered phase to a disordered phase at the Curie temperature, given by \autoref{eq:curie temp}. Logistic regression will be used as a binary classification method to predict if a given state of the two-dimensional Ising model is ordered or disordered. We will be looking at a system of $L=40$ spins in each dimension, that is, a total $L^2 = 1\,600$ spins. The data, provided by Metha et. al \cite{Mehta_2019}, is a set of $10 \,000$ spin configurations (with $40 \times 40$ spins each) labeled ordered 1 or disordered 0. The goal is to build a model which will take in a spin configuration and predict whether it constitutes an ordered or disordered phase. 
 
-\autoref{fig:2d_ising_states} shows some states from the data set for both the ordered and disordered phase, and the critical region as well. 
+The lattices are represented as flattened arrays with $1\,600$ elements instead of a matrix of $40 \times 40$ elements. The dataset is first divided into three pieces, each consisting of either the ordered, disordered or "critical-like" phase. We use both ordered and disordered states to train the logistic regressor. We will evaluate the performance of our classification model on unseen ordered and disordered states. The remaining critical states will be used as held-out validation set which the hope is that we will be able to make good extrapolated predictions on. If successful, this may be a viable method to locate the position of the critical point in other complicated models with no known exact analytical solution \cite{Mehta_2019}.
+
+\autoref{fig:2d_ising_states} shows some states from the dataset for both the ordered and disordered phase, and the critical region as well. 
 
 \begin{figure}[H]
 \begin{center}\includegraphics[scale=0.5]{latex/figures/ising_states.pdf}
 \end{center}
-\caption{figure text}
+\caption{Examples of typical states of the two-dimensional Ising model for three different temperatures in the ordered phase, the critical region and the disordered phase. The system dimension is $L=40$ spin sites.}
 \label{fig:2d_ising_states}
 \end{figure}
+
+In order to minimize the cross entropy, given by \autoref{eq:cross-entropy}, we will implement both Gradient Descent (see \autoref{sec:gradient descent}) and Newton-Raphson (see \autoref{sec:newton-raphson method}). 
 
 GD - find optimal pair values for the learning rate $\eta$ and regularization parameter $\lambda$ the on a small training set by. best pair of values will be which give the highest accuracy score, see \autoref{eq:accuracy score}, for both the training and test set and ultimately the held-out set with the critical states. We will then use the optimal parameters on a larger training set, with the hope that it gives a even higher prediction accuracy.
 
@@ -53,7 +57,7 @@ To train the network, one must supply a training set and validation set. The cho
 \subsubsection{Regression on Energy of Generalized Ising Model using Neural 
 Networks}
 
-In the same manner as described in \autoref{sec:method datagen}, a set of energies 
+In the same manner as described in \autoref{sec:method linreg}, a set of energies 
 as targets were produced by the real Ising model \autoref{eq:ising 1D energy}, but the features were assumed to originate from an unknown model(generalized Ising model). Using a neural network, the energies were attempted learned from the $1600$ features, of which only $80$ have real explanatory ability(those who contribute in the real model). The parameters of the neural network can be summarized in \autoref{tab:nn_params}.
 
 
