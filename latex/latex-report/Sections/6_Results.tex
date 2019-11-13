@@ -67,13 +67,18 @@ From \autoref{fig:j_lmbda} we see that Ridge regression also learn nearly symmet
 \label{fig:performance_lmbda_1d}
 \end{figure}
 
-From figure \autoref{fig:performance_lmbda_1d} it is evident that Lasso with $\lambda=10^{-2}$ achieves an excellent accuracy on the test set and by far surpasses the other models for all values of $\lambda$. 
+From \autoref{fig:performance_lmbda_1d} it is evident that Lasso with $\lambda=10^{-2}$ achieves an excellent predictive ability on the test set and by far surpasses the other models for all values of $\lambda$. 
 
+\autoref{fig:bias_var__1d}
 
-
-DISCUSS R2 MSE
-
-BIAS-VARIANCE
+\begin{figure}[H]
+\centering
+\subfloat[]{{\includegraphics[scale=0.5]{latex/figures/ising1D_ridge_bias_variance.pdf}}}
+\qquad
+\subfloat[]{{\includegraphics[scale=0.5]{latex/figures/ising1D_lasso_bias_variance.pdf}}}
+\caption{Bias-variance decomposition}
+\label{fig:bias_var__1d}
+\end{figure}
 
 %----------------------------------------------------------------
 \subsection{Identifying 2D Ising Model Phases with Logistic Regression}\label{sec:results logreg}

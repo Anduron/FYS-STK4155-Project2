@@ -117,15 +117,15 @@ The gradient of the cross-entropy with regard to the model parameters $\bm{\beta
 \end{equation}
 in \cite{logreglec}.
 
-There is no known closed-form solution to compute the value of $\bm{\beta}$ that minimizes the cross-entropy, i.e. the equation $\nabla_{\bm{\beta}} J = \bm{0}$ has no analytic solution. The cross-entropy is, however, convex, so Gradient Descent (or any other optimization algorithm) is guaranteed to find the global minimum (with the right learning rate and sufficient time) \cite{Hands-onML}.
+There is no closed-form solution to compute the value of $\bm{\beta}$ that minimizes the cross-entropy, i.e. the equation $\nabla_{\bm{\beta}} J = \bm{0}$ has no analytic solution. The cross-entropy is, however, convex, so Gradient Descent (or any other optimization algorithm) is guaranteed to find the global minimum (with the right learning rate and sufficient time) \cite{Hands-onML}.
 
 As with linear regression, we often supplement the logistic regressor with additional regularization terms to the cross-entropy, usually $L_1$ and $L_2$ regularization \cite{logreglec}. With $L_2$ regularization the cross entropy reads
 \begin{equation}\label{eq:cross-ent with L2 reg}
-    J (\bm{\beta}) = - \sum_{i=1}^n \qty(y_i \log(\hat{p}_i) + (1-y_i) \log(1 - \hat{p}_i) ) + \frac{1}{2} \lambda \norm{\bm{\beta}}_2^2,
+    J (\bm{\beta}) = - \sum_{i=1}^n \qty(y_i \log(\hat{p}_i) + (1-y_i) \log(1 - \hat{p}_i) ) + \lambda \norm{\bm{\beta}}_2^2,
 \end{equation}
 which simply adds a term to the gradient
 \begin{equation}\label{eq:logcost deriv L2 reg}
-    \nabla_{\bm{\beta}} J = -\bm{X}^T \qty(\bm{y} -\bm{\hat{p}}) + \lambda \bm{\beta}
+    \nabla_{\bm{\beta}} J = -\bm{X}^T \qty(\bm{y} -\bm{\hat{p}}) + 2\lambda \bm{\beta}
 \end{equation}
 where $\lambda$ is the regularization parameter. 
 
