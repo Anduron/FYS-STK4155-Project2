@@ -14,14 +14,18 @@ The procedures for producing the following results are contained in Jupyter Note
 %----------------------------------------------------------------
 Accompanying notebook: \href{https://github.com/nicolossus/FYS-STK4155-Project2/blob/master/notebooks/linreg_ising.ipynb}{linreg\_ising.ipynb}.
 
+
 \autoref{fig:j_ols} shows the coupling matrix obtained by performing OLS regression.
 
 \begin{figure}[H]
 \begin{center}\includegraphics[scale=0.6]{latex/figures/ising_J_ols.pdf}
 \end{center}
-\caption{figure text}
+\caption{Learned coupling matrix $J_{ij}$ for the Ising model ansatz in \autoref{eq:general} for ordinary least squares (OLS) regression.}
 \label{fig:j_ols}
 \end{figure}
+
+In the linear regression problem, we assumed no prior knowledge about the origin of the data set. Hence, a Ising model with pairwise interactions between every pair of variables is used here. This generalized model gives rise to that OLS learn nearly symmetric weights $J=-0.5$, as seen in \autoref{fig:j_ols}. What the generalization of the model means, is that we included both $s_j s_i$ and $s_i s_j$ for all $i,j$ in the features. Since these quantities are equal, we do not get a unique solution for OLS, so we resort to singular value decomposition (SVD). SVD gives the coefficients with the least $L2$-norm. Hence we tend to get solutions $J_{i,j}=J_{j,i}=-0.5$.
+
 
 \autoref{fig:j_lmbda} shows the coupling matrices obtained by performing Ridge and Lasso regression with different regularization parameter, $\lambda$, values.
 
@@ -47,11 +51,11 @@ Accompanying notebook: \href{https://github.com/nicolossus/FYS-STK4155-Project2/
 \subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_10000_0.pdf}}}
 \qquad
 \subfloat[]{{\includegraphics[scale=0.35]{latex/figures/ising_J_lmbda_100000_0.pdf}}}
-\caption{figure text}
+\caption{Learned coupling matrix $J_{ij}$ for the Ising model ansatz in \autoref{eq:general} for Ridge regression (to the left in each subfigure) and Lasso regression (to the right in each subfigure) at different regularization strengths $\lambda$. }
 \label{fig:j_lmbda}
 \end{figure}
 
-When doing the regression we included both $s_j s_i$ and $s_i s_j$ for all $i,j$ in the features. Since these quantities are equal, we do not get a unique solution for OLS, so we resort to singular value decomposition (SVD). SVD gives the coefficients with the least $L2$-norm. Hence we tend to get solutions $J_{i,j}=J_{j,i}=-0.5$. Ridge is similar in this regard, since it uses an $L2$ penalty. Lasso uses the $L1$-norm which doesn't differentiate between e.g. $J_{i,j}=-1$ and $J_{j,i} = 0$ on one hand and $J_{i,j}=J_{j,i}=-0.5$ on the other. Lasso tends to give coefficients which are equal to zero, which is consistent with what we have observed here.
+From \autoref{fig:j_lmbda} we see that Ridge regression also learn nearly symmetric weights $J=-0.5$. Ridge is similar to the OLS case in this regard, since it uses an $L2$ penalty. Lasso regression, however, tends to break this symmetry and perfectly determine the coupling $J=-1$ with proper regularization. With regularization $\lambda = 10^{-2}$, Lasso even gives an $R^2$ score of 1.
 
 
 \autoref{fig:performance_lmbda_1d} shows the $R^2$ score and MSE as a function of the regularization parameter $\lambda$.
@@ -61,9 +65,13 @@ When doing the regression we included both $s_j s_i$ and $s_i s_j$ for all $i,j$
 \subfloat[]{{\includegraphics[scale=0.5]{latex/figures/ising1D_r2_vs_lmbda.pdf}}}
 \qquad
 \subfloat[]{{\includegraphics[scale=0.5]{latex/figures/ising1D_mse_vs_lmbda.pdf}}}
-\caption{figure text}
+\caption{Performance of OLS, Ridge and Lasso regression with different regularization strengths on the Ising model as measured by the \textbf{(a)} $R^2$ score and \textbf{(b)} MSE.}
 \label{fig:performance_lmbda_1d}
 \end{figure}
+
+From figure \autoref{fig:performance_lmbda_1d} it is evident that Lasso with $\lambda=10^{-2}$ achieve an excellent accuracy on the test set and by far surpasses the other models for all values of $\lambda$. 
+
+
 
 DISCUSS R2 MSE
 
@@ -213,7 +221,7 @@ Logistic regression is not able to correctly fit the Ising model as it is not a 
 %----------------------------------------------------------------
 Accompanying notebook: \href{https://github.com/nicolossus/FYS-STK4155-Project2/blob/master/notebooks/nn_ising.ipynb}{nn\_ising.ipynb}.
 
-Figure \autoref{fig:NN_reg} shows the R2-score different neural networks predicting the energy of the Ising model, using features produced by the Generalized Ising model.
+\autoref{fig:NN_reg} shows the R2-score different neural networks predicting the energy of the Ising model, using features produced by the Generalized Ising model.
 
 \begin{figure}[H]
 \centering

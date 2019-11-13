@@ -5,7 +5,11 @@
 %----------------------------------------------------------------
 \subsection{The Ising Model}\label{sec:ising theory}
 %----------------------------------------------------------------
-The Ising model is a binary value system where the variables of the model can take two values only, e.g. $\pm 1$ or 0 and 1. In statistical mechanics, the Ising model is used to model interacting magnetic dipole moments of atomic spins. The spins, denoted by $s$, are are arranged in a lattice with $L$ spin sites, allowing each spin to interact with its neighbors. The two dimensional square lattice Ising model exhibits a phase transition from a magnetic phase(a system with finite magnetic moment) to a phase with zero magnetization at a given critical temperature, called the Curie temperature, $T_C$. \cite{PROJising}
+The Ising model is a binary value system where the variables of the model can take two values only, e.g. $\pm 1$ or 0 and 1. In statistical mechanics, the Ising model is used to model interacting magnetic dipole moments of atomic spins. The spins, denoted by $s$, are are arranged in a lattice with $L$ spin sites, allowing each spin to interact with its neighbors. The two dimensional square lattice Ising model exhibits a phase transition from a magnetic phase(a system with finite magnetic moment) to a phase with zero magnetization at a given critical temperature, called the Curie temperature, $T_C$ \cite{PROJising}. The Curie temperature is
+\begin{equation}\label{eq:curie temp}
+    T_C = \frac{2}{\log \qty(1 + \sqrt{2})} \approx 2.269 \text{ in energy units},
+\end{equation}
+as shown by Lars Onsager \cite{PhysRev.65.117}.
 
 By simplifying the interaction between the spins to nearest neighbors only and assuming that the nearest neighbors have the same interaction strength, the Hamiltonian of the system can be defined as
 \begin{equation}\label{eq:ising energy}
@@ -126,12 +130,18 @@ which simply adds a term to the gradient
 where $\lambda$ is the regularization parameter. 
 
 
+\subsubsection{Accuracy Score}
+
 The performance of a logistic regression model can be measured with the accuracy score, given by
 \begin{equation}\label{eq:accuracy score}
     \text{Accuracy} = \frac{\sum_{i=1}^n I(t_i = y_i)}{n},
 \end{equation}
 where $I$ is the indicator function, 1 if $t_i = y_i$ and 0 otherwise, where $t_i$ represents the target and $y_i$ the outputs. A perfect classifier will have a score of 1.
 
+\subsubsection{Receiver Operating Characteristic} 
+Another metric for assessing the quality of the model, is the receiver operating characteristic (ROC) curve, which tells us how well the model correctly classifies the different labels. The ROC curve is created by plotting the true positive rate (the rate of predicted positive classes that are positive) against the false positive rate (the rate of predicted positive classes that are negative) for varying thresholds. 
+
+An estimate of how well the model is performing can be obtained by computing the area under the curve (AUC) of the ROC curve. Pure guessing will get an AUC of $0.5$. A perfect score will get an AUC of $1.0$. \cite{logregMorten}
 
 
 %--------------------------------------------------------------
@@ -186,14 +196,13 @@ then $Df(x)$ is invertible for all $x$ in the open ball $B\left(x,\frac{1}{KM}\r
 \subsection{Neural Network}\label{sec:dnn theory}
 %----------------------------------------------------------------
 Neural networks comprise a huge family of flexible function suitable of approximating nearly any function. Originally used as a simple model of the brain 
-by McCulloch and Pitts in 1943(Siter), the field of neural networks has proved to be extremely useful in the world of modelling and machine learning. Today, the progress is still going strong, with application in a vast number of fields and many different flavors of neural networks
+by McCulloch and Pitts in 1943 \cite{nnMorten}, the field of neural networks has proved to be extremely useful in the world of modelling and machine learning. Today, the progress is still going strong, with application in a vast number of fields and many different flavors of neural networks
 
-\subsubsection{Architechture of the Feed-Forward Neural Network}
+\subsubsection{Architecture of the Feed-Forward Neural Network}
 In this project, we focus on the feed-forward neural network, hereafter referred
-to simply as neural network. A neural network is in essence a real-valued function that may take number of inputs and outputs. It's behaviour is completely determined by its architecture, which is comprised of hidden layers.
+to simply as neural network. A neural network is in essence a real-valued function that may take any number of inputs and outputs. It's behaviour is completely determined by its architecture, which is comprised of hidden layers.
 
-A hidden layers is a set of nodes that relates to the emitted values of the 
-previous hidden layer, or the inputs, it case it is the first hidden layer in the 
+A hidden layers is a set of nodes that are wired to the previous hidden layer, or the inputs, in case it is the first hidden layer in the 
 network. For the i'th node in the first hidden layer, its activation is 
 calculated as
 \begin{equation}\label{eq:activation}
@@ -216,7 +225,7 @@ cost function is consulted
     C(y, \tilde{y}) = \sum_{i=1}^N c(y_i, \tilde{y_i}) 
 \end{equation}
 Where the sum is over $N$ data-points, $y_i$ is the target of the i'th data point,
-and $\tilde{y_i}$ is the accompanying prediction of the network given by $\tilde{y_i} = NN(X_i)$. $c$ is typically he square loss for regression
+and $\tilde{y_i}$ is the accompanying prediction of the network given by $\tilde{y_i} = NN(X_i)$. $c$ is typically the square loss for regression
 
 \begin{equation}\label{eq:square_loss}
     c(y_i, \tilde{y_i}) = (y_i - \tilde{y_i})^2,
@@ -227,9 +236,9 @@ and cross entropy for binary classification
     c(y_i, \tilde{y_i}) = y_i\log(\tilde{y_i}) + (1 - y_i)\log(1 - \tilde{y_i}),
 \end{equation}
 
-For a untrained neural network, the weights $W$ connecting all the layers are typically initialized in random fashion, popularly as $W \sim N(0,1)$, and the biases $b$ set to a small number such as $0.01$. 
+For an untrained neural network, the weights $W$ connecting all the layers are typically initialized in random fashion, popularly as $W \sim N(0,1)$, and the biases $b$ set to a small number such as $0.01$. 
 
-To improve the model from the initial random state, we would like to minimize the cost function with respect to the weights. As the neural network is a very complex function, and not even a convex problem where are minima are global minima, the optimal weights can not be found by $\frac{dC}{dW^l_{ij}} = 0$. Instead, we resort to using gradient decent methods.
+To improve the model from the initial random state, we would like to minimize the cost function with respect to the weights. As the neural network is a very complex function, and not even a convex problem where all minima are global minima, the optimal weights can not be found by $\frac{dC}{dW^l_{ij}} = 0$. Instead, we resort to using gradient decent methods.
 
 To compute the gradient $\frac{dC}{dW^l_{ij}}$, we use the chain rule repeatedly to produce an expression that keeps track of how the variation of the cost function propagates backward in the neural network, so-called backward propagation.
 
@@ -259,9 +268,9 @@ where $\mu$ is the learning rate.
 
 \subsubsection{Regularization}
 
-Neural networks quickly grow in complexity as you increase the number of hidden layers and number of neurons for each layer. one must take care not to overfit the networks. A common approach is to add the L2-norm of the weights to the cost function, in the same spirit as the ridge regression:
+Neural networks quickly grow in complexity as you increase the number of hidden layers and number of neurons for each layer. One must take care not to overfit the networks. A common approach is to add the L2-norm of the weights to the cost function as a form of penalty, in the spirit of Ridge Regression:
 \begin{equation*}
-    C(y, \tilde{y}) = \sum_i(y_i - \tilde{y_i})^2 + \lambda \sum_{ijl}{w^l_{ij}}^2
+    C(y, \tilde{y}) = \sum_i(y_i - \tilde{y_i})^2 + 0.5\lambda \sum_{ijl}{w^l_{ij}}^2
 \end{equation*}
 This changes the update rule for the weights to
 \begin{equation}\label{eq:grad step}
