@@ -3,5 +3,10 @@
 %================================================================
 \begin{abstract}
 
-dataset provided by Metha et. al \cite{Mehta_2019}.
+In this project, we have applied several statistical learning methods to data from the Ising model for atomic spins. For the one-dimensional Ising model, a neural network and linear regression methods were used to determine the coupling constant for the Ising model Hamiltonian. The two-dimensional Ising model exhibits a phase transition from an ordered phase to a disordered phase at a critical temperature. The goal was to build a model with both logistic regression and neural networks, which for a given spin configuration predicted whether it constituted an ordered or disordered phase.
+
+In the linear regression problem, we assumed no prior knowledge about the origin of the dataset, i.e. an Ising model with pairwise interactions between every spin pair was used. This generalized model gave rise to that OLS and Ridge regression learned nearly symmetric weights $J=-0.5$. Lasso regression tends to break this symmetry and perfectly determine the coupling $J=-1$. With regularization $\lambda = 10^{-2}$, Lasso gave an $R^2$ score of 1. For the neural network, this was a challenging set of features to predict from, since most of them lack any explanatory ability. The network was shown to neglect the non-contributing features and recreate the energy, given that it was sufficiently penalized. The best model achieved an $R^2$ score of $0.933$.
+
+Logistic regression was not able to correctly fit the two-dimensional Ising model as it is not a linear model, and was, in the case with both Gradient Descent and Newton-Raphson as optimization methods, no better than just guessing the phase. Neural networks were also used in predicting phases in the 2D Ising model. Our models rivaled those of Metha et. al \cite{Mehta_2019}, achieving an accuracy score of $100\%$ on ordered/disordered test data, as opposed to $99.9\%$ . However, ours did not generalize as good on the critical phases, only achieving a score of $76.5\%$, as opposed to $95.9\%$. 
+
 \end{abstract}
