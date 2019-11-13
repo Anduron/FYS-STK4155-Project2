@@ -26,7 +26,6 @@ Accompanying notebook: \href{https://github.com/nicolossus/FYS-STK4155-Project2/
 
 In the linear regression problem, we assumed no prior knowledge about the origin of the data set. Hence, a Ising model with pairwise interactions between every pair of variables is used here. This generalized model gives rise to that OLS learn nearly symmetric weights $J=-0.5$, as seen in \autoref{fig:j_ols}. What the generalization of the model means, is that we included both $s_j s_i$ and $s_i s_j$ for all $i,j$ in the features. Since these quantities are equal, we do not get a unique solution for OLS, so we resort to singular value decomposition (SVD). SVD gives the coefficients with the least $L2$-norm. Hence we tend to get solutions $J_{i,j}=J_{j,i}=-0.5$.
 
-
 \autoref{fig:j_lmbda} shows the coupling matrices obtained by performing Ridge and Lasso regression with different regularization parameter, $\lambda$, values.
 
 \begin{figure}[H]
@@ -55,8 +54,7 @@ In the linear regression problem, we assumed no prior knowledge about the origin
 \label{fig:j_lmbda}
 \end{figure}
 
-From \autoref{fig:j_lmbda} we see that Ridge regression also learn nearly symmetric weights $J=-0.5$. Ridge is similar to the OLS case in this regard, since it uses an $L2$ penalty. Lasso regression, however, tends to break this symmetry and perfectly determine the coupling $J=-1$ with proper regularization. With regularization $\lambda = 10^{-2}$, Lasso even gives an $R^2$ score of 1.
-
+From \autoref{fig:j_lmbda} we see that Ridge regression also learn nearly symmetric weights $J=-0.5$. Ridge is similar to the OLS case in this regard, since it uses an $L2$ penalty. Regularization of Ridge regression does not improve the performance. Lasso regression, however, tends to break this symmetry and perfectly determine the coupling $J=-1$ with proper regularization. With regularization $\lambda = 10^{-2}$, Lasso even gives an $R^2$ score of 1. 
 
 \autoref{fig:performance_lmbda_1d} shows the $R^2$ score and MSE as a function of the regularization parameter $\lambda$.
 
@@ -69,7 +67,7 @@ From \autoref{fig:j_lmbda} we see that Ridge regression also learn nearly symmet
 \label{fig:performance_lmbda_1d}
 \end{figure}
 
-From figure \autoref{fig:performance_lmbda_1d} it is evident that Lasso with $\lambda=10^{-2}$ achieve an excellent accuracy on the test set and by far surpasses the other models for all values of $\lambda$. 
+From figure \autoref{fig:performance_lmbda_1d} it is evident that Lasso with $\lambda=10^{-2}$ achieves an excellent accuracy on the test set and by far surpasses the other models for all values of $\lambda$. 
 
 
 
@@ -111,7 +109,7 @@ $\alpha$ & $\beta$ & $\gamma$
 \end{table}
 
 
-Optimal parameters, figures of acc 
+figures of acc 
 
 \autoref{fig:gd_acc_lambda}
 
@@ -128,36 +126,7 @@ Optimal parameters, figures of acc
 \label{fig:gd_acc_lambda}
 \end{figure}
 
-COMMENT FIGURE
 
-To easier see the actual values, \autoref{tab:opt params train}, \autoref{tab:opt params test} and \autoref{tab:opt params crit} tabulates the maximum accuracy for the training, test and critical dataset, respectively. All tables also lists the value of the parameters as well as the accuracy score of the other two datasets. The full table from which these were retrieved can be found in as \autoref{tab:full table} in \autoref{sec:Appendix B}.
-
-\begin{table}[H]
-\parbox{.45\linewidth}{
-\caption{Maximum accuracy score for training dataset with the corresponding parameters listed and the accuracy score of the other two datasets listed as well.}
-\centering
-\rowcolors{2}{gray!25}{white}
-\input{latex/tables/opt_params_train_max}
-\label{tab:opt params train}
-}
-\hfill
-\parbox{.45\linewidth}{
-\caption{Maximum accuracy score for test dataset with the corresponding parameters listed and the accuracy score of the other two datasets listed as well.}
-\centering
-\rowcolors{2}{gray!25}{white}
-\input{latex/tables/opt_params_test_max}
-\label{tab:opt params test}
-}
-\end{table}
-
-
-\begin{table}[H]
-\caption{Maximum accuracy score for critical dataset with the corresponding parameters listed and the accuracy score of the other two datasets listed as well.}
-\centering
-\rowcolors{2}{gray!25}{white}
-\input{latex/tables/opt_params_crit_max}
-\label{tab:opt params crit}
-\end{table}
 
 There are no clear optimal parameters, and the accuracy with a particular set of parameters also changes for different runs. None of the best accuracies are great either. However, we stick with the best result for the maximum training accuracy in the table above on a larger training set (20\%). The results are shown in table
 
@@ -232,7 +201,7 @@ Accompanying notebook: \href{https://github.com/nicolossus/FYS-STK4155-Project2/
 \label{fig:NN_reg}
 \end{figure}
 
-As the real Ising model only include local coupling, only $80$ of the $1600$ features of the generalized model actually contribute to the energy. The interesting question to explore if the network is able to pick out the useful features and ignore the others. From the above figure, we see that the more heavily penalised models perform generally better. In the same manner that Ridge and Lasso help linear regression suppress features of less importance and reduce variance, the regularizing the network produces better models, presumably by suppressing the weights connecting to the redundant features. To go a step further, a model using $\mu = 9 \cdot 10^{-5}$ and $\lambda = 0.004$ was trained. This model yielded a $R^2$ score of 0.26. 
+As the real Ising model only include local coupling, only $80$ of the $1600$ features of the generalized model actually contribute to the energy. The interesting question to explore is if the network is able to pick out the useful features and ignore the others. From the above figure, we see that the more heavily penalised models perform generally better. In the same manner that Ridge and Lasso help linear regression suppress features of less importance and reduce variance, the regularizing the network produces better models, presumably by suppressing the weights connecting to the redundant features. To go a step further, a model using $\mu = 9 \cdot 10^{-5}$ and $\lambda = 0.004$ was trained. This model yielded a $R^2$ score of 0.26. 
 
 To elaborate the previous point, figure \autoref{fig:NN_CS} visualises the Connection Strength (CS), \autoref{eq:CS}, of all the inputs for models using learning rate $\mu = 9 \cdot 10^{-5}$ and penalties $0.0005$, $0.001$, $0.002$ and $0.004$. 
 
@@ -284,7 +253,7 @@ An eye-catching result is the sudden ruination of one of the models, yielding a 
 
 The fluke aside, our model attained a maximum accuracy score of $100\%$ for the ordered/disordered data meant for testing, rivaling Mehta's model of $99.9\%$ accuracy. However, our models did not generalize as good on the critical data, attaining only an accuracy of $76.5\%$ as opposed to $95.9\%$. This could be that 400 nodes is not high enough complexity to capture the finer details needed to distinguish the critical states, or it could simply be because the learning rate and penalty was not chosen precise enough: Since the training is very expensive, our grid search is rather course.
 
-\autoref{NN_misclass} highlights two states from the critical set that was misclassified by the best neural network trained on the ordered/disordered set.
+\autoref{fig:NN_misclass} highlights two states from the critical set that was misclassified by the best neural network trained on the ordered/disordered set.
 
 \begin{figure}[H]
 \centering
