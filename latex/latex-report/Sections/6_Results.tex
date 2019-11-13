@@ -67,56 +67,27 @@ From \autoref{fig:j_lmbda} we see that Ridge regression also learn nearly symmet
 \label{fig:performance_lmbda_1d}
 \end{figure}
 
-From \autoref{fig:performance_lmbda_1d} it is evident that Lasso with $\lambda=10^{-2}$ achieves an excellent predictive ability on the test set and by far surpasses the other models for all values of $\lambda$. 
+From \autoref{fig:performance_lmbda_1d} it is evident that Lasso with $\lambda=10^{-2}$ achieves an excellent predictive ability on the test set and by far surpasses the other models for all values of $\lambda$. Using to strong regularization causes the MSE to increase as the model becomes unable to fit the data. It is also noteworthy that OLS and Ridge has notable deviations between the training and test set, which may be an indication of overfitting.
 
-\autoref{fig:bias_var__1d}
+The bias-variance decomposition of Ridge and Lasso regression with different regularization strengths are shown in \autoref{fig:bias_var__1d}.
 
 \begin{figure}[H]
 \centering
 \subfloat[]{{\includegraphics[scale=0.5]{latex/figures/ising1D_ridge_bias_variance.pdf}}}
 \qquad
 \subfloat[]{{\includegraphics[scale=0.5]{latex/figures/ising1D_lasso_bias_variance.pdf}}}
-\caption{Bias-variance decomposition}
+\caption{Bias-variance decomposition using bootstrap for \textbf{(a)} Ridge regression and \textbf{(b)} Lasso regression with different regularization strengths $\lambda$.}
 \label{fig:bias_var__1d}
 \end{figure}
+
+The bias-variance decomposition corresponds well with the findings from \autoref{fig:performance_lmbda_1d}, which is expected as there is no noise in the data.
 
 %----------------------------------------------------------------
 \subsection{Identifying 2D Ising Model Phases with Logistic Regression}\label{sec:results logreg}
 %----------------------------------------------------------------
 Accompanying notebook: \href{https://github.com/nicolossus/FYS-STK4155-Project2/blob/master/notebooks/logreg_ising.ipynb}{logreg\_ising.ipynb}. 
 
-blablabla
-5200 train samples
-30000 critical samples
-124800 test samples
-table of (constant) parameters, n-iter
-
-\begin{table}[H]
-\caption{Table text}
-\centering
-\rowcolors{2}{gray!25}{white}
-\begin{tabular}{ccc}
-\hline
-\hline 
-$\alpha$ & $\beta$ & $\gamma$
-\\
-\hline 
-\hline 
-0.1 & 0.2 & 0.3
-\\
-0.4 & 0.5 & 0.6
-\\
-0.7 & 0.8 & 0.9
-\\
-\hline
-\end{tabular}
-\label{tab:tab1}
-\end{table}
-
-
-figures of acc 
-
-\autoref{fig:gd_acc_lambda}
+\autoref{fig:gd_acc_lambda} shows the accuracy of the logistic regressor with Gradient Descent as optimization method and different values for the learning rate $\eta$ and regularization $\lambda$.
 
 \begin{figure}[H]
 \centering
@@ -131,64 +102,48 @@ figures of acc
 \label{fig:gd_acc_lambda}
 \end{figure}
 
+In the above figure, we see the accuracies for the training (blue), test (red) and critical (green) datasets. The accuracies fluctuate dramatically, implying that the predictions are all over the place. However, the accuracies seems to be worse with stronger regularization. The difference between test and training sets could in theory tell us about the relative degree of overfitting, but is hard to assess due to the fluctuations. Due to the physics of the Ising model, we expect that predicting the phase close to the critical point will be more difficult. This, however, is not present in our results here, as the regressor seems to just guess for all sets.
 
-
-There are no clear optimal parameters, and the accuracy with a particular set of parameters also changes for different runs. None of the best accuracies are great either. However, we stick with the best result for the maximum training accuracy in the table above on a larger training set (20\%). The results are shown in table
-
-26000 train samples
-30000 critical samples
-104000 test samples
-eta: 0.01
-lambda: 0.1
-Training accuracy 53.74230769230769
-Test accuracy 53.61057692307693
-Critical accuracy 66.66666666666666
-
-A roc curve tells us more. Roc curve in figure ..
-
-\autoref{fig:roc_gd}
+There are no clear optimal parameters, and none of the best accuracies are great either. However, we stick with the best parameters for the maximum training accuracy, $\eta=0.01$ and $\lambda=0.1$, and try to fit on a larger training set (20\%). The result is shown in the ROC curve in \autoref{fig:roc_gd}.
 
 \begin{figure}[H]
 \begin{center}\includegraphics[scale=0.5]{latex/figures/logistic_roc_curve_gd.pdf}
 \end{center}
-\caption{figure text}
+\caption{ROC curve for our logistic regressor with Gradient Descent as optimization method.}
 \label{fig:roc_gd}
 \end{figure}
 
-As seen in the figure, our logistic regression model with gradient descent does no better than just guessing the phase.
+As seen in the above figure, our logistic regression model with gradient descent does no better than just guessing the phase.
 
 A second optimization method has also been implemented, NR.
-This method is notoriously slow iterative scheme, so we will only apply it on a small training set and with few iterations. Only 4\% training data and 5 iterations 
+This method is notoriously slow iterative scheme, so we will only apply it on a small training set and with few iterations. Only 4\% training data and 10 iterations 
 
-table of parameters
+The results from running Newton-Raphson for different $\lambda$ is shown in \cref{tab:nr_res} and in \autoref{fig:acc_nr}. We get a slight top at $\lambda = 10^0=1$, so this is our chosen regularization parameter. We plot the ROC curve with this in \autoref{fig:roc_nr} to evaluate the model.
 
-best regularization parameter
 
-\autoref{fig:acc_nr}
+\begin{table}[H]
+\caption{The logistic regressor's accuracy on the training, test and critical sets with Newton-Raphson as optimization method.}
+\centering
+\rowcolors{2}{gray!25}{white}
+\input{latex/tables/nr_accuracy.tex}
+\label{tab:nr_res}
+\end{table}
 
 \begin{figure}[H]
 \begin{center}\includegraphics[scale=0.7]{latex/figures/log_acc_nr.pdf}
 \end{center}
-\caption{figure text}
+\caption{The accuracy score of the training, test and critical datasets as a function of the regularization parameter $\lambda$ for different learning rates $\eta$. Newton-Raphson was used as optimization method.}
 \label{fig:acc_nr}
 \end{figure}
-
-$\lambda = 10^2$ clearly gives the highest accuracy when all states are taken into account. As the training and test accuracy is declining for this $\lambda$, this seems like an optimal value. We therefore plot the ROC curve with this regularization.
-
-\autoref{fig:roc_nr}
 
 \begin{figure}[H]
 \begin{center}\includegraphics[scale=0.5]{latex/figures/logistic_roc_curve_nr.pdf}
 \end{center}
-\caption{figure text}
+\caption{ROC curve for our logistic regressor with Newton-Raphson as optimization method.}
 \label{fig:roc_nr}
 \end{figure}
 
-Logistic regression is not able to correctly fit the Ising model as it is not a linear model, and is, in the case with both Gradient Descent and Newton-Raphson as optimization methods, no better than just guessing.
-
-
-
-
+As we can see in \cref{fig:roc_nr}, logistic regression is not able to correctly fit the Ising model. This is not surprising as it is not a linear model. The logistic regression model is no better than just guessing.
 
 %----------------------------------------------------------------
 \subsection{Regression on Energy of Generalized Ising Model using Neural Networks}\label{sec:results NN reg}

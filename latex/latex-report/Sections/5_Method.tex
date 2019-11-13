@@ -7,7 +7,7 @@
 %----------------------------------------------------------------
 We want to predict the total energy of the system based on the spin configuration. Assuming no knowledge about the interactions between the spins, a choice of model can be
 \begin{equation}\label{eq:general}
-    H_{\text{model}}(\mathbf{s}^i) = - \sum_{j=1}^N\sum_{k=1}^N J_{j,k}s_j^is_k^i,
+    H_{\text{model}}(\mathbf{s}^i) = \sum_{j=1}^N\sum_{k=1}^N J_{j,k}s_j^is_k^i,
 \end{equation}
 where $\mathbf{s}^i$ is a particular spin configuration. By collecting all the two-body interactions $\{s_j^is_k^i\}$ for all $i=1,\ldots,N$ in a design matrix $\mathbf{X}$, and all the non-local coupling strengths $J_{j,k}$ in a vector $\mathbf{J}$, we can write this as
 \begin{equation*}
@@ -15,7 +15,7 @@ where $\mathbf{s}^i$ is a particular spin configuration. By collecting all the t
 \end{equation*}
 With this formulation we can use regression methods from project 1 (OLS, Ridge and Lasso), see \autoref{sec:Appendix A} or \cite{PROJone}, to find the coefficients $\mathbf{J}$.
 
-We generate $N = 10\,000$ spin configurations, each consisting of $40$ spins. The spins take values in $\{-1,1\}$ and are uniformly distributed. The energy of each system is calculated in accordance with \cref{eq:ising 1D energy} for $J=1$.
+We generate $N = 10\,000$ spin configurations, each consisting of $40$ spins. The spins take values in $\{-1,1\}$ with a uniform distribution. The energy of each system is calculated in accordance with \cref{eq:ising 1D energy} for $J=1$.
 
 In order to assess the models, we use the $R^2$ score, given by \autoref{eq:R2}, and mean squared error (MSE), given by \autoref{eq:MSE}, as measures of performance. 
 
@@ -27,7 +27,7 @@ A bias-variance analysis using the bootstrap resampling method for best model se
 
 Here, we use the binary logistic regression, as discussed in \autoref{sec:logreg theory}, and the two-dimensional Ising model with Hamiltonian given by \autoref{eq:ising energy}. Opposed to the one-dimensional Ising model, we will get a phase transition from an ordered phase to a disordered phase at the Curie temperature, given by \autoref{eq:curie temp}. Logistic regression will be used as a binary classification method to predict if a given state of the two-dimensional Ising model is ordered or disordered. We will be looking at a system of $L=40$ spins in each dimension, that is, a total $L^2 = 1\,600$ spins. The data, provided by Metha et. al \cite{Mehta_2019}, is a set of $10 \,000$ spin configurations (with $40 \times 40$ spins each) labeled ordered 1 or disordered 0. The goal is to build a model which will take in a spin configuration and predict whether it constitutes an ordered or disordered phase. 
 
-The lattices are represented as flattened arrays with $1\,600$ elements instead of a matrix of $40 \times 40$ elements. The dataset is first divided into three pieces, each consisting of either the ordered, disordered or "critical-like" phase. We use both ordered and disordered states to train the logistic regressor. We will evaluate the performance of our classification model on unseen ordered and disordered states. The remaining critical states will be used as held-out validation set which the hope is that we will be able to make good extrapolated predictions on. If successful, this may be a viable method to locate the position of the critical point in other complicated models with no known exact analytical solution \cite{Mehta_2019}.
+The lattices are represented as flattened arrays with $1\,600$ elements instead of a matrix of $40 \times 40$ elements. The dataset is first divided into three pieces, each consisting of either the ordered, disordered or "critical-like" phase. We use both ordered and disordered states to train the logistic regressor. We will estimate the test error on unseen ordered and disordered states, to assess the regularization parameter. The remaining critical states will be used as held-out validation set on which the hope is that we will be able to make good extrapolated predictions. If successful, this may be a viable method to locate the position of the critical point in other complicated models with no known exact analytical solution \cite{Mehta_2019}.
 
 \autoref{fig:2d_ising_states} shows some states from the dataset for both the ordered and disordered phase, and the critical region as well. 
 
@@ -40,12 +40,9 @@ The lattices are represented as flattened arrays with $1\,600$ elements instead 
 
 In order to minimize the cross entropy, given by \autoref{eq:cross-entropy}, we will implement both Gradient Descent (see \autoref{sec:gradient descent}) and Newton-Raphson (see \autoref{sec:newton-raphson method}). 
 
-GD - find optimal pair values for the learning rate $\eta$ and regularization parameter $\lambda$ the on a small training set by. best pair of values will be which give the highest accuracy score, see \autoref{eq:accuracy score}, for both the training and test set and ultimately the held-out set with the critical states. We will then use the optimal parameters on a larger training set, with the hope that it gives a even higher prediction accuracy.
+We first attempt doing the logistic regression using the Gradient Descent method for optimization. The data set is quite large and slow to work with, so we begin with a small training set. We try different values for both the learning rate $\eta$ and the regularization parameter $\lambda$ in hope to find something that works out, as measured by the accuracy score, see \autoref{eq:accuracy score}. Afterwards, maybe affected by hubris, we try to use these parameters on a much larger training set, with the hope that we can achieve an even higher prediction accuracy. We evaluate the model by the ROC curve for the model performance on the critical phase ising states.
 
-ROC curve
-
-
-To conclude the logistic regression analysis, we try to use Newton-Raphson's method for optimization (see \autoref{sec:newton-raphson method}). This method has a notoriously slow iterative scheme, so we will only apply it on a small training set and with few iterations. A ROC curve will also be presented for this method
+To conclude the logistic regression analysis, after seeing the Gradient Descent's poor optimization performance, we try to use the Newton-Raphson method (see \autoref{sec:newton-raphson method}). This method has a notoriously slow iterative scheme, so we will only apply it on a small training set and with few, but sufficiently many, iterations. A ROC curve will also be presented for this method.
 
 %----------------------------------------------------------------
 \subsection{Neural Networks}\label{sec:method NN}
